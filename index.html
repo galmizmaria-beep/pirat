@@ -1,635 +1,621 @@
-<div id="FX_ROOT">
-<!-- 
-Инструкция по использованию:
-1. Сохраните весь этот код в один файл с расширением .html (например, sea-battle.html).
-2. Разместите этот файл на хостинге (например, GitHub Pages).
-3. Откройте ссылку на этот файл в браузере. Вы увидите новый РЕДАКТОР.
-4. Настройте игру:
-   - Загрузите изображения персонажей с вашего компьютера.
-   - Раскрывайте каждую ячейку, чтобы выбрать ее тип (задание, сундук, меч) и ввести вопрос/ответы, если нужно.
-   - Справа вы увидите предпросмотр того, как будет выглядеть выбранная ячейка в игре.
-5. Нажмите кнопку "Сгенерировать код для вставки".
-6. Скопируйте сгенерированный HTML-код из появившегося поля.
-7. Вставьте этот код в ваш проект Genially.
--->
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Морской Бой - Редактор</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
 
-/* --- ОБЩИЕ СТИЛИ И ПЕРЕМЕННЫЕ --- */
-#FX_ROOT {
-    /* Цветовая палитра, вдохновленная референсом */
-    --sea-water-glow: #2de2e6; /* Яркий бирюзовый для свечения */
-    --wood-dark: #6a3805;
-    --wood-mid: #a0522d;
-    --wood-light: #d2b48c;
-    --parchment: #f5eeda;
-    --text-dark: #4a2c2a;
-    --danger-red: #e74c3c;
-    --success-green: #2ecc71;
-    --shadow-color: rgba(0, 0, 0, 0.5);
+        /* --- ОБЩИЕ СТИЛИ И ПЕРЕМЕННЫЕ --- */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Предотвращаем прокрутку самой страницы */
+        }
+        
+        #FX_ROOT {
+            /* Цветовая палитра, вдохновленная референсом */
+            --sea-water-glow: #2de2e6; /* Яркий бирюзовый для свечения */
+            --wood-dark: #6a3805;
+            --wood-mid: #a0522d;
+            --wood-light: #d2b48c;
+            --parchment: #f5eeda;
+            --text-dark: #4a2c2a;
+            --danger-red: #e74c3c;
+            --success-green: #2ecc71;
+            --shadow-color: rgba(0, 0, 0, 0.5);
 
-    /* Адаптивные размеры для Genially */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    font-family: 'Pangolin', cursive;
-    overflow: hidden;
-    color: var(--text-dark);
-    
-    /* Текстура воды из референса в Base64 для автономности */
-    background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAoACgDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAYDBQcE/8QAIxAAAgEDAwUBAQAAAAAAAAAAAQIDBAURAAYSIQcTMRQiQf/EABkBAAMBAQEAAAAAAAAAAAAAAAMEBQIGAP/EAB4RAAICAgMAAwAAAAAAAAAAAAECAAMRIQQSEzFB/9oADAMBAAIRAxEAPwDVbbtdPV0sNVNULCsyLIsewkgEZGen7nQe9+HNDWQNLRSCnnydqONyH2Psf3Oie2L+nbqP/AKj/AEay953hS21WiiC1VXtP4434RT6Zuv7j71HPNyG7B4G/k5TcaW42msNNeaV4ZB0bhkfsynow9Gs1K8FZAksTrLE4yrqcqR8g1s+3bpobnRw1sRkCTLuAdSpHqpB6EEEfGsQ3bQPZt3Vjptxpa2TfAoP9qTqyj6PUH3+6U1V2oOQfZP1I7L2kSgY2s32y3SnuNIk9O+VPUdmQ+VPqDWKkkSNGeRgiKMszHAA9yakWDbjtC6WqWqkp2p1k7QxO2SRgHHGOvPOjO8dxbfeKGWgpJjUybkPmEbVGActzxkgce+tVvUeS8fWw4G5U7ju25X+s82dkgpwT5VMhyFHufUn6/YaXW+mrb1MKSkgeolPCogLEfU+g+Tqza7FuW5usjQ07wU+R5lS+EVR3PPUn2AJ1t+27TbrDSIlKqq8gAaeUDc7nuc9gPQDgajq22tqJ2+YF+z1Ea33W1Lb7fDTRMWWJNu5hyx7k/kk6yNdOkUbO7BVAySToXe93UdshYRv51QR8MaHhfufQfOsMvG4blflkSGY0VvY8xRtyzD0LN/gYH11NV2Z+q7hX6kht3c1LudyV1/uBp6Z2S2QNlUHBeQerfQeg/c6Q0lLT0MCwU0SQxL0VFAA/Y0+gjSGJIo1CIihVUDAAHQDWbS17iBVCgAfZ//Z');
-    background-repeat: repeat;
-}
+            /* Адаптивные размеры */
+            width: 100%;
+            height: 100%;
+            
+            font-family: 'Pangolin', cursive;
+            color: var(--text-dark);
+            
+            /* Текстура воды из референса в Base64 для автономности */
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAoACgDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAYDBQcE/8QAIxAAAgEDAwUBAQAAAAAAAAAAAQIDBAURAAYSIQcTMRQiQf/EABkBAAMBAQEAAAAAAAAAAAAAAAMEBQIGAP/EAB4RAAICAgMAAwAAAAAAAAAAAAECAAMRIQQSEzFB/9oADAMBAAIRAxEAPwDVbbtdPV0sNVNULCsyLIsewkgEZGen7nQe9+HNDWQNLRSCnnydqONyH2Psf3Oie2L+nbqP/AKj/AEay953hS21WiiC1VXtP4434RT6Zuv7j71HPNyG7B4G/k5TcaW42msNNeaV4ZB0bhkfsynow9Gs1K8FZAksTrLE4yrqcqR8g1s+3bpobnRw1sRkCTLuAdSpHqpB6EEEfGsQ3bQPZt3Vjptxpa2TfAoP9qTqyj6PUH3+6U1V2oOQfZP1I7L2kSgY2s32y3SnuNIk9O+VPUdmQ+VPqDWKkkSNGeRgiKMszHAA9yakWDbjtC6WqWqkp2p1k7QxO2SRgHHGOvPOjO8dxbfeKGWgpJjUybkPmEbVGActzxkgce+tVvUeS8fWw4G5U7ju25X+s82dkgpwT5VMhyFHufUn6/YaXW+mrb1MKSkgeolPCogLEfU+g+Tqza7FuW5usjQ07wU+R5lS+EVR3PPUn2AJ1t+27TbrDSIlKqq8gAaeUDc7nuc9gPQDgajq22tqJ2+YF+z1Ea33W1Lb7fDTRMWWJNu5hyx7k/kk6yNdOkUbO7BVAySToXe93UdshYRv51QR8MaHhfufQfOsMvG4blflkSGY0VvY8xRtyzD0LN/gYH11NV2Z+q7hX6kht3c1LudyV1/uBp6Z2S2QNlUHBeQerfQeg/c6Q0lLT0MCwU0SQxL0VFAA/Y0+gjSGJIo1CIihVUDAAHQDWbS17iBVCgAfZ//Z');
+            background-repeat: repeat;
+            position: relative; /* Добавлено для правильного позиционирования дочерних элементов */
+        }
 
-/* --- СТИЛИ РЕДАКТОРА --- */
-#sb-editor-container {
-    display: none;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 20px;
-    overflow-y: auto;
-}
-.sb-editor-wrapper {
-    display: flex;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background: var(--parchment);
-    border: 10px solid var(--wood-dark);
-    border-image: linear-gradient(45deg, var(--wood-mid), var(--wood-dark)) 1;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 0 25px var(--shadow-color), 0 0 15px var(--sea-water-glow);
-}
-.sb-editor-main-panel { flex: 2; }
-.sb-editor-preview-panel { flex: 1; position: sticky; top: 20px; height: fit-content; }
+        /* --- СТИЛИ РЕДАКТОРА --- */
+        #sb-editor-container {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .sb-editor-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--parchment);
+            border: 10px solid var(--wood-dark);
+            border-image: linear-gradient(45deg, var(--wood-mid), var(--wood-dark)) 1;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 25px var(--shadow-color), 0 0 15px var(--sea-water-glow);
+        }
+        .sb-editor-main-panel { flex: 2; }
+        .sb-editor-preview-panel { flex: 1; position: sticky; top: 20px; height: fit-content; }
 
-.sb-editor-section {
-    margin-bottom: 25px;
-    border-bottom: 2px dashed var(--wood-light);
-    padding-bottom: 20px;
-}
-.sb-editor-section h3 {
-    color: var(--wood-dark);
-    font-size: 1.8em;
-    margin-top: 0;
-    text-align: center;
-    text-shadow: 1px 1px 0px var(--wood-light);
-}
+        .sb-editor-section {
+            margin-bottom: 25px;
+            border-bottom: 2px dashed var(--wood-light);
+            padding-bottom: 20px;
+        }
+        .sb-editor-section h3 {
+            color: var(--wood-dark);
+            font-size: 1.8em;
+            margin-top: 0;
+            text-align: center;
+            text-shadow: 1px 1px 0px var(--wood-light);
+        }
 
-.sb-editor-form-group { margin-bottom: 15px; }
-.sb-editor-form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 1.1em; }
-.sb-editor-form-group input, .sb-editor-form-group textarea, .sb-editor-form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid var(--wood-mid);
-    border-radius: 8px;
-    background: #fff;
-    box-sizing: border-box;
-    font-family: 'Pangolin', cursive;
-    font-size: 1em;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-.sb-editor-btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-family: 'Pangolin', cursive;
-    transition: all 0.2s;
-    background-color: var(--wood-mid);
-    color: white;
-    text-shadow: 1px 1px 2px var(--shadow-color);
-    box-shadow: 0 4px 0 var(--wood-dark), 0 0 10px var(--sea-water-glow);
-}
-.sb-editor-btn:hover {
-    background-color: var(--wood-light);
-    color: var(--wood-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 var(--wood-dark), 0 0 15px var(--sea-water-glow);
-}
-#sb-generate-btn {
-    width: 100%; padding: 15px; font-size: 1.5em; background-color: var(--success-green);
-    box-shadow: 0 4px 0 #25a25a, 0 0 15px var(--sea-water-glow);
-}
-#sb-generate-btn:hover { background-color: #38e08a; box-shadow: 0 6px 0 #25a25a, 0 0 20px var(--sea-water-glow); }
+        .sb-editor-form-group { margin-bottom: 15px; }
+        .sb-editor-form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 1.1em; }
+        .sb-editor-form-group input, .sb-editor-form-group textarea, .sb-editor-form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--wood-mid);
+            border-radius: 8px;
+            background: #fff;
+            box-sizing: border-box;
+            font-family: 'Pangolin', cursive;
+            font-size: 1em;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .sb-editor-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-family: 'Pangolin', cursive;
+            transition: all 0.2s;
+            background-color: var(--wood-mid);
+            color: white;
+            text-shadow: 1px 1px 2px var(--shadow-color);
+            box-shadow: 0 4px 0 var(--wood-dark), 0 0 10px var(--sea-water-glow);
+        }
+        .sb-editor-btn:hover {
+            background-color: var(--wood-light);
+            color: var(--wood-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 var(--wood-dark), 0 0 15px var(--sea-water-glow);
+        }
+        #sb-generate-btn {
+            width: 100%; padding: 15px; font-size: 1.5em; background-color: var(--success-green);
+            box-shadow: 0 4px 0 #25a25a, 0 0 15px var(--sea-water-glow);
+        }
+        #sb-generate-btn:hover { background-color: #38e08a; box-shadow: 0 6px 0 #25a25a, 0 0 20px var(--sea-water-glow); }
 
-/* Настройка ячеек - Аккордеон */
-#sb-cells-accordion details { margin-bottom: 10px; }
-#sb-cells-accordion summary {
-    padding: 15px;
-    background: var(--wood-light);
-    border: 2px solid var(--wood-dark);
-    border-radius: 8px;
-    cursor: pointer; font-size: 1.2em; list-style: none; display: flex;
-    justify-content: space-between; align-items: center;
-    box-shadow: 0 0 8px var(--sea-water-glow);
-}
-#sb-cells-accordion summary::after { content: '⚓'; transform: rotate(0); transition: transform 0.3s; }
-#sb-cells-accordion details[open] summary::after { transform: rotate(180deg); }
-#sb-cells-accordion .sb-cell-content { padding: 15px; border: 2px solid var(--wood-dark); border-top: none; border-radius: 0 0 8px 8px; background-color: rgba(245, 238, 218, 0.7); }
+        /* Настройка ячеек - Аккордеон */
+        #sb-cells-accordion details { margin-bottom: 10px; }
+        #sb-cells-accordion summary {
+            padding: 15px;
+            background: var(--wood-light);
+            border: 2px solid var(--wood-dark);
+            border-radius: 8px;
+            cursor: pointer; font-size: 1.2em; list-style: none; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 0 8px var(--sea-water-glow);
+        }
+        #sb-cells-accordion summary::after { content: '⚓'; transform: rotate(0); transition: transform 0.3s; }
+        #sb-cells-accordion details[open] summary::after { transform: rotate(180deg); }
+        #sb-cells-accordion .sb-cell-content { padding: 15px; border: 2px solid var(--wood-dark); border-top: none; border-radius: 0 0 8px 8px; background-color: rgba(245, 238, 218, 0.7); }
+        .sb-answer-group { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
 
-/* Окно предпросмотра */
-#sb-editor-preview-container {
-    padding: 20px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-    border: 2px solid var(--sea-water-glow);
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-}
-#sb-editor-preview-modal {
-    background: var(--parchment);
-    color: var(--text-dark);
-    border: 5px solid var(--wood-dark);
-    border-radius: 15px;
-    padding: 20px;
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 15px var(--sea-water-glow);
-}
-#sb-preview-question { font-size: 1.4em; min-height: 50px; margin-bottom: 20px; }
-#sb-preview-answers { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-.sb-preview-answer-btn { padding: 10px; border: 2px solid var(--wood-mid); border-radius: 8px; background: #fff; font-size: 1.1em; font-family: 'Pangolin', cursive; }
-.sb-preview-answer-btn.correct { background: var(--success-green); color: white; border-color: #25a25a; }
-.sb-preview-icon { width: 80px; height: 80px; margin-bottom: 15px; filter: drop-shadow(0 0 5px var(--wood-dark)); }
-.sb-preview-icon-label { font-size: 1.5em; color: var(--wood-dark); }
+        /* Окно предпросмотра */
+        #sb-editor-preview-container {
+            padding: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            border: 2px solid var(--sea-water-glow);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+        #sb-editor-preview-modal {
+            background: var(--parchment);
+            color: var(--text-dark);
+            border: 5px solid var(--wood-dark);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px var(--sea-water-glow);
+        }
+        #sb-preview-question { font-size: 1.4em; min-height: 50px; margin-bottom: 20px; word-break: break-word; }
+        #sb-preview-answers { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .sb-preview-answer-btn { padding: 10px; border: 2px solid var(--wood-mid); border-radius: 8px; background: #fff; font-size: 1.1em; font-family: 'Pangolin', cursive; }
+        .sb-preview-answer-btn.correct { background: var(--success-green); color: white; border-color: #25a25a; }
+        .sb-preview-icon { width: 80px; height: 80px; margin-bottom: 15px; filter: drop-shadow(0 0 5px var(--wood-dark)); }
+        .sb-preview-icon-label { font-size: 1.5em; color: var(--wood-dark); }
 
-/* --- СТИЛИ ИГРЫ --- */
-#sb-game-container {
-    width: 100%; height: 100%;
-    display: none; /* Скрыт по умолчанию */
-    flex-direction: column; justify-content: center; align-items: center; position: relative;
-}
-#sb-game-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-#sb-status-bar {
-    position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(0, 0, 0, 0.5); padding: 10px;
-    border-radius: 10px; display: flex; align-items: center; z-index: 100; color: white;
-    border: 1px solid var(--sea-water-glow);
-    box-shadow: 0 0 10px var(--sea-water-glow);
-}
-#sb-player-avatar {
-    width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--sea-water-glow);
-    background-size: cover; background-position: center; margin-right: 15px;
-}
-#sb-lives-container { display: flex; gap: 5px; }
-#sb-lives-container svg { width: 30px; height: 30px; fill: var(--danger-red); filter: drop-shadow(0 0 3px black); }
-#sb-game-board {
-    display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px);
-    gap: 10px; position: relative; z-index: 10;
-}
-.sb-game-cell {
-    width: 100 Q 30 50, 50 70 T 90 70" stroke="rgba(45,226,230,0.5)" stroke-width="4" fill="none"/></svg>');
-    background-size: cover;
-    box-shadow: 0 0 5px var(--sea-water-glow), inset 0 0 10px rgba(0,0,0,0.4);
-}
-.sb-game-cell:not(.opened):hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px var(--sea-water-glow), 0 0 25px var(--sea-water-glow);
-}
-.sb-game-cell.opened {
-    background-color: rgba(0,0,0,0.3); cursor: default; background-image: none;
-    display: flex; justify-content: center; align-items: center;
-}
-.sb-game-cell.opened svg { width: 60%; height: 60%; }
+        /* --- СТИЛИ ИГРЫ --- */
+        #sb-game-container {
+            width: 100%; height: 100%;
+            display: none; /* Скрыт по умолчанию */
+            flex-direction: column; justify-content: center; align-items: center; position: relative;
+        }
+        #sb-game-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #sb-status-bar {
+            position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(0, 0, 0, 0.5); padding: 10px;
+            border-radius: 10px; display: flex; align-items: center; z-index: 100; color: white;
+            border: 1px solid var(--sea-water-glow);
+            box-shadow: 0 0 10px var(--sea-water-glow);
+        }
+        #sb-player-avatar {
+            width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--sea-water-glow);
+            background-size: cover; background-position: center; margin-right: 15px;
+        }
+        #sb-lives-container { display: flex; gap: 5px; }
+        #sb-lives-container svg { width: 30px; height: 30px; fill: var(--danger-red); filter: drop-shadow(0 0 3px black); }
+        #sb-game-board {
+            display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px);
+            gap: 10px; position: relative; z-index: 10;
+        }
+        .sb-game-cell {
+            width: 100px; height: 100px;
+            background-color: rgba(0, 50, 100, 0.5);
+            border: 3px solid var(--wood-dark);
+            border-radius: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M10 30 Q 30 10, 50 30 T 90 30" stroke="rgba(45,226,230,0.5)" stroke-width="4" fill="none"/><path d="M10 50 Q 30 30, 50 50 T 90 50" stroke="rgba(45,226,230,0.6)" stroke-width="4" fill="none"/><path d="M10 70 Q 30 50, 50 70 T 90 70" stroke="rgba(45,226,230,0.5)" stroke-width="4" fill="none"/></svg>');
+            background-size: cover;
+            box-shadow: 0 0 5px var(--sea-water-glow), inset 0 0 10px rgba(0,0,0,0.4);
+        }
+        .sb-game-cell:not(.opened):hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--sea-water-glow), 0 0 25px var(--sea-water-glow);
+        }
+        .sb-game-cell.opened {
+            background-color: rgba(0,0,0,0.3); cursor: default; background-image: none;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .sb-game-cell.opened svg { width: 60%; height: 60%; }
 
-.sb-modal-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7); display: none; /* flex */
-    justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box;
-}
-.sb-modal-content {
-    background: var(--parchment); padding: 30px; border-radius: 15px; border: 5px solid var(--wood-dark);
-    max-width: 600px; width: 100%; text-align: center;
-    box-shadow: 0 0 20px var(--sea-water-glow), 0 0 30px var(--sea-water-glow);
-}
-#sb-question-text { font-size: 1.4em; margin-bottom: 20px; color: var(--text-dark); }
-#sb-answers-container { display: flex; flex-direction: column; gap: 10px; }
-.sb-answer-btn {
-    padding: 15px; border: 2px solid var(--wood-mid); border-radius: 8px; background: #fff;
-    cursor: pointer; font-size: 1.1em; transition: all 0.2s; font-family: 'Pangolin', cursive;
-    box-shadow: 0 0 5px var(--sea-water-glow);
-}
-.sb-answer-btn:hover {
-    background: var(--wood-light); color: var(--wood-dark); transform: scale(1.02);
-    box-shadow: 0 0 15px var(--sea-water-glow);
-}
-/* Остальные стили игры (корабль, анимации и т.д.) без изменений */
-#sb-player-ship { position: absolute; width: 150px; height: 150px; left: 5%; top: 50%; transform: translateY(-50%); background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0, 20)"><path d="M 20 120 C 20 140, 180 140, 180 120 L 170 80 L 30 80 Z" fill="%23a0522d" stroke="%236a3805" stroke-width="4"/><rect x="95" y="0" width="10" height="110" fill="%23a0522d" stroke="%236a3805" stroke-width="2"/><path d="M 105 10 C 145 20, 145 60, 105 70 Z" fill="white" stroke="black" stroke-width="2"/><circle cx="100" cy="90" r="5" fill="black"/><path d="M 20 125 Q 100 150, 180 125" stroke="%232de2e6" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg>'); background-size: contain; background-repeat: no-repeat; z-index: 5; filter: drop-shadow(3px 3px 5px var(--shadow-color));}
-#sb-character-select-modal { display: flex; }
-#sb-character-list { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-.sb-character-choice { cursor: pointer; border: 4px solid transparent; border-radius: 10px; transition: all 0.2s; }
-.sb-character-choice:hover { border-color: var(--danger-red); transform: scale(1.1); }
-.sb-character-choice img { width: 100px; height: 100px; border-radius: 6px; display: block; box-shadow: 0 0 10px var(--sea-water-glow);}
-#sb-game-over-modal .sb-modal-content { animation: gameOverAppear 0.5s ease-out; }
-#sb-game-over-title { font-size: 3em; font-weight: bold; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
-#sb-game-over-title.win { color: var(--success-green); }
-#sb-game-over-title.lose { color: var(--danger-red); }
-@keyframes gameOverAppear { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.sinking { animation: sink 2s ease-in forwards; }
-@keyframes sink { 0% { transform: translateY(-50%) rotate(0deg); } 50% { transform: translateY(-30%) rotate(-15deg); } 100% { transform: translateY(100%) rotate(-30deg); } }
-.confetti { position: absolute; width: 8px; height: 16px; background: #f00; opacity: 0; animation: confetti-fall 4s linear infinite; }
-@keyframes confetti-fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-#sb-cannonball { position: absolute; width: 20px; height: 20px; background: black; border-radius: 50%; z-index: 200; display: none; box-shadow: 0 0 5px orange; }
-#sb-explosion { position: absolute; width: 100px; height: 100px; background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="orange"/><circle cx="50" cy="50" r="30" fill="yellow"/><circle cx="50" cy="50" r="15" fill="white"/></svg>'); background-size: contain; transform: scale(0); opacity: 0; z-index: 201; display: none; }
-</style>
-
-<!-- ### HTML-СТРУКТУРА ### -->
-<div id="sb-editor-container">
-    <div class="sb-editor-wrapper">
-        <div class="sb-editor-main-panel">
-            <h2 style="text-align:center; font-size: 2.5em; color: var(--wood-dark);">Редактор 'Морской Бой'</h2>
-            <div class="sb-editor-section">
-                <h3>Общие настройки</h3>
-                <div class="sb-editor-form-group"><label for="sb-player-lives">Начальное количество жизней:</label><input type="number" id="sb-player-lives" value="3" min="1" max="10"></div>
-                <div class="sb-editor-form-group"><label for="sb-background-url">URL фона для игры (необязательно):</label><input type="text" id="sb-background-url" placeholder="Оставьте пустым для фона по умолчанию"></div>
-            </div>
-            <div class="sb-editor-section">
-                <h3>Персонажи</h3>
-                <div id="sb-characters-list"></div><button id="sb-add-character-btn" class="sb-editor-btn">Добавить персонажа</button>
-            </div>
-            <div class="sb-editor-section">
-                <h3>Игровое поле</h3>
-                <div id="sb-cells-accordion"></div>
-            </div>
-            <div class="sb-editor-section">
-                <button id="sb-generate-btn" class="sb-editor-btn">Сгенерировать код для вставки</button>
-                <div id="sb-generated-code-container" style="display: none; margin-top: 15px;"><textarea id="sb-generated-code" readonly style="height: 120px; width: 100%; font-size: 0.9em;"></textarea></div>
-            </div>
-        </div>
-        <div class="sb-editor-preview-panel">
-            <h3>Предпросмотр ячейки</h3>
-            <div id="sb-editor-preview-container">
-                <div id="sb-editor-preview-modal">
-                    <!-- Содержимое предпросмотра генерируется JS -->
+        .sb-modal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); display: none; /* flex */
+            justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box;
+        }
+        .sb-modal-content {
+            background: var(--parchment); padding: 30px; border-radius: 15px; border: 5px solid var(--wood-dark);
+            max-width: 600px; width: 100%; text-align: center;
+            box-shadow: 0 0 20px var(--sea-water-glow), 0 0 30px var(--sea-water-glow);
+        }
+        #sb-question-text { font-size: 1.4em; margin-bottom: 20px; color: var(--text-dark); }
+        #sb-answers-container { display: flex; flex-direction: column; gap: 10px; }
+        .sb-answer-btn {
+            padding: 15px; border: 2px solid var(--wood-mid); border-radius: 8px; background: #fff;
+            cursor: pointer; font-size: 1.1em; transition: all 0.2s; font-family: 'Pangolin', cursive;
+            box-shadow: 0 0 5px var(--sea-water-glow);
+        }
+        .sb-answer-btn:hover {
+            background: var(--wood-light); color: var(--wood-dark); transform: scale(1.02);
+            box-shadow: 0 0 15px var(--sea-water-glow);
+        }
+        #sb-player-ship { position: absolute; width: 150px; height: 150px; left: 5%; top: 50%; transform: translateY(-50%); background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0, 20)"><path d="M 20 120 C 20 140, 180 140, 180 120 L 170 80 L 30 80 Z" fill="%23a0522d" stroke="%236a3805" stroke-width="4"/><rect x="95" y="0" width="10" height="110" fill="%23a0522d" stroke="%236a3805" stroke-width="2"/><path d="M 105 10 C 145 20, 145 60, 105 70 Z" fill="white" stroke="black" stroke-width="2"/><circle cx="100" cy="90" r="5" fill="black"/><path d="M 20 125 Q 100 150, 180 125" stroke="%232de2e6" stroke-width="6" fill="none" stroke-linecap="round"/></g></svg>'); background-size: contain; background-repeat: no-repeat; z-index: 5; filter: drop-shadow(3px 3px 5px var(--shadow-color));}
+        #sb-character-select-modal { display: flex; }
+        #sb-character-list { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .sb-character-choice { cursor: pointer; border: 4px solid transparent; border-radius: 10px; transition: all 0.2s; }
+        .sb-character-choice:hover { border-color: var(--danger-red); transform: scale(1.1); }
+        .sb-character-choice img { width: 100px; height: 100px; border-radius: 6px; display: block; box-shadow: 0 0 10px var(--sea-water-glow);}
+        #sb-game-over-modal .sb-modal-content { animation: gameOverAppear 0.5s ease-out; }
+        #sb-game-over-title { font-size: 3em; font-weight: bold; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        #sb-game-over-title.win { color: var(--success-green); }
+        #sb-game-over-title.lose { color: var(--danger-red); }
+        @keyframes gameOverAppear { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .sinking { animation: sink 2s ease-in forwards; }
+        @keyframes sink { 0% { transform: translateY(-50%) rotate(0deg); } 50% { transform: translateY(-30%) rotate(-15deg); } 100% { transform: translateY(100%) rotate(-30deg); } }
+        .confetti { position: absolute; width: 8px; height: 16px; background: #f00; opacity: 0; animation: confetti-fall 4s linear infinite; }
+        @keyframes confetti-fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+        #sb-cannonball { position: absolute; width: 20px; height: 20px; background: black; border-radius: 50%; z-index: 200; display: none; box-shadow: 0 0 5px orange; }
+        #sb-explosion { position: absolute; width: 100px; height: 100px; background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="orange"/><circle cx="50" cy="50" r="30" fill="yellow"/><circle cx="50" cy="50" r="15" fill="white"/></svg>'); background-size: contain; transform: scale(0); opacity: 0; z-index: 201; display: none; }
+    </style>
+</head>
+<body>
+    <div id="FX_ROOT">
+        <!-- ### HTML-СТРУКТУРА ### -->
+        <div id="sb-editor-container">
+            <div class="sb-editor-wrapper">
+                <div class="sb-editor-main-panel">
+                    <h2 style="text-align:center; font-size: 2.5em; color: var(--wood-dark);">Редактор 'Морской Бой'</h2>
+                    <div class="sb-editor-section">
+                        <h3>Общие настройки</h3>
+                        <div class="sb-editor-form-group"><label for="sb-player-lives">Начальное количество жизней:</label><input type="number" id="sb-player-lives" value="3" min="1" max="10"></div>
+                        <div class="sb-editor-form-group"><label for="sb-background-url">URL фона для игры (необязательно):</label><input type="text" id="sb-background-url" placeholder="Оставьте пустым для фона по умолчанию"></div>
+                    </div>
+                    <div class="sb-editor-section">
+                        <h3>Персонажи</h3>
+                        <div id="sb-characters-list-editor"></div><button id="sb-add-character-btn" class="sb-editor-btn">Добавить персонажа</button>
+                    </div>
+                    <div class="sb-editor-section">
+                        <h3>Игровое поле</h3>
+                        <div id="sb-cells-accordion"></div>
+                    </div>
+                    <div class="sb-editor-section">
+                        <button id="sb-generate-btn" class="sb-editor-btn">Сгенерировать код для вставки</button>
+                        <div id="sb-generated-code-container" style="display: none; margin-top: 15px;"><label for="sb-generated-code">Код для вставки в Genially:</label><textarea id="sb-generated-code" readonly style="height: 120px; width: 100%; font-size: 0.9em;"></textarea></div>
+                    </div>
+                </div>
+                <div class="sb-editor-preview-panel">
+                    <h3>Предпросмотр ячейки</h3>
+                    <div id="sb-editor-preview-container">
+                        <div id="sb-editor-preview-modal">
+                            <!-- Содержимое предпросмотра генерируется JS -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div id="sb-game-container">
+            <div id="sb-game-background"></div>
+            <div id="sb-status-bar"><div id="sb-player-avatar"></div><div id="sb-lives-container"></div></div>
+            <div id="sb-player-ship"></div>
+            <div id="sb-game-board"></div>
+            <div id="sb-cannonball"></div>
+            <div id="sb-explosion"></div>
+            <div id="sb-character-select-modal" class="sb-modal-overlay"><div class="sb-modal-content"><h2>Выберите своего пирата!</h2><div id="sb-character-list-game"></div></div></div>
+            <div id="sb-question-modal" class="sb-modal-overlay"><div class="sb-modal-content"><p id="sb-question-text"></p><div id="sb-answers-container"></div></div></div>
+            <div id="sb-game-over-modal" class="sb-modal-overlay"><div class="sb-modal-content"><h2 id="sb-game-over-title"></h2></div></div>
+        </div>
     </div>
-</div>
 
-<div id="sb-game-container">
-    <div id="sb-game-background"></div>
-    <div id="sb-status-bar"><div id="sb-player-avatar"></div><div id="sb-lives-container"></div></div>
-    <div id="sb-player-ship"></div>
-    <div id="sb-game-board"></div>
-    <div id="sb-cannonball"></div>
-    <div id="sb-explosion"></div>
-    <div id="sb-character-select-modal" class="sb-modal-overlay"><div class="sb-modal-content"><h2>Выберите своего пирата!</h2><div id="sb-character-list"></div></div></div>
-    <div id="sb-question-modal" class="sb-modal-overlay"><div class="sb-modal-content"><p id="sb-question-text"></p><div id="sb-answers-container"></div></div></div>
-    <div id="sb-game-over-modal" class="sb-modal-overlay"><div class="sb-modal-content"><h2 id="sb-game-over-title"></h2></div></div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const root = document.getElementById('FX_ROOT');
-    if (!root) { console.error('Root element #FX_ROOT not found!'); return; }
-    
-    // Иконки для предпросмотра и игры
-    const chestIconSVG = `<svg class="sb-preview-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fef9e7" stroke="#8B4513" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 10V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M12 6V14"/></svg>`;
-    const swordIconSVG = `<svg class="sb-preview-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#d9534f" stroke-width="2"><path d="M14.5 14.5L21 21"/><path d="M4 20l5-5"/><path d="M15 4l6 6"/><path d="M3 9l6 6"/><path d="M9 3l12 12"/><rect x="2" y="13" width="4" height="4" transform="rotate(-45 2 13)"/></svg>`;
-
-    const editorContainer = root.querySelector('#sb-editor-container');
-    const gameContainer = root.querySelector('#sb-game-container');
-    const params = new URLSearchParams(window.location.search);
-    const configData = params.get('config');
-
-    if (configData) {
-        try {
-            const decodedConfig = JSON.parse(decodeURIComponent(atob(configData)));
-            runGame(decodedConfig);
-        } catch (e) {
-            console.error("Failed to parse game config:", e);
-            runEditor(); // Если конфиг битый, запускаем редактор
-        }
-    } else {
-        runEditor();
-    }
-
-    function runEditor() {
-        editorContainer.style.display = 'block';
-        gameContainer.style.display = 'none';
-
-        let characterCount = 0;
-        const charactersList = root.querySelector('#sb-characters-list');
-        const addCharacterBtn = root.querySelector('#sb-add-character-btn');
-        const cellsAccordion = root.querySelector('#sb-cells-accordion');
-        const generateBtn = root.querySelector('#sb-generate-btn');
-        const previewModal = root.querySelector('#sb-editor-preview-modal');
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const root = document.getElementById('FX_ROOT');
+        if (!root) { console.error('Root element #FX_ROOT not found!'); return; }
         
-        // Инициализация редактора
-        function initEditor() {
-            for (let i = 0; i < 9; i++) {
-                const details = document.createElement('details');
-                details.dataset.index = i;
-                details.innerHTML = `
-                    <summary>Ячейка ${i + 1}</summary>
-                    <div class="sb-cell-content">
-                        <div class="sb-editor-form-group">
-                            <label>Тип ячейки:</label>
-                            <select class="sb-cell-type">
-                                <option value="normal">Обычная (задание)</option>
-                                <option value="chest">Сундук (+1 жизнь)</option>
-                                <option value="sword">Меч (-1 жизнь)</option>
-                            </select>
-                        </div>
-                        <div class="sb-cell-question-group">
+        const chestIconSVG = `<svg class="sb-preview-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fef9e7" stroke="#8B4513" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 10V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M12 6V14"/></svg>`;
+        const swordIconSVG = `<svg class="sb-preview-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#d9534f" stroke-width="2"><path d="M14.5 14.5L21 21"/><path d="M4 20l5-5"/><path d="M15 4l6 6"/><path d="M3 9l6 6"/><path d="M9 3l12 12"/><rect x="2" y="13" width="4" height="4" transform="rotate(-45 2 13)"/></svg>`;
+
+        const editorContainer = root.querySelector('#sb-editor-container');
+        const gameContainer = root.querySelector('#sb-game-container');
+        const params = new URLSearchParams(window.location.search);
+        const configData = params.get('config');
+
+        if (configData) {
+            try {
+                const decodedConfig = JSON.parse(decodeURIComponent(atob(configData)));
+                runGame(decodedConfig);
+            } catch (e) {
+                console.error("Failed to parse game config:", e);
+                runEditor();
+            }
+        } else {
+            runEditor();
+        }
+
+        function runEditor() {
+            editorContainer.style.display = 'block';
+            gameContainer.style.display = 'none';
+
+            let characterCount = 0;
+            const charactersList = root.querySelector('#sb-characters-list-editor');
+            const addCharacterBtn = root.querySelector('#sb-add-character-btn');
+            const cellsAccordion = root.querySelector('#sb-cells-accordion');
+            const generateBtn = root.querySelector('#sb-generate-btn');
+            const previewModal = root.querySelector('#sb-editor-preview-modal');
+            
+            function initEditor() {
+                for (let i = 0; i < 9; i++) {
+                    const details = document.createElement('details');
+                    details.dataset.index = i;
+                    details.innerHTML = `
+                        <summary>Ячейка ${i + 1}</summary>
+                        <div class="sb-cell-content">
                             <div class="sb-editor-form-group">
-                                <label>Текст задания:</label>
-                                <textarea class="sb-cell-question" rows="3"></textarea>
+                                <label>Тип ячейки:</label>
+                                <select class="sb-cell-type">
+                                    <option value="normal">Обычная (задание)</option>
+                                    <option value="chest">Сундук (+1 жизнь)</option>
+                                    <option value="sword">Меч (-1 жизнь)</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="sb-cell-answers-group">
-                             <div class="sb-editor-form-group">
-                                <label>Варианты ответа (отметьте правильный):</label>
-                                <div class="sb-editor-answers-list"></div>
-                                <button class="sb-editor-btn sb-add-answer-btn" style="font-size: 0.9em; padding: 8px 15px;">+ Добавить вариант</button>
+                            <div class="sb-cell-question-group">
+                                <div class="sb-editor-form-group">
+                                    <label>Текст задания:</label>
+                                    <textarea class="sb-cell-question" rows="3"></textarea>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
-                cellsAccordion.appendChild(details);
-                const answersContainer = details.querySelector('.sb-editor-answers-list');
-                addAnswerField(answersContainer, i, true);
-                addAnswerField(answersContainer, i);
-            }
-            addCharacterField();
-            updatePreview(0); // Показать предпросмотр первой ячейки при запуске
-        }
-
-        function addCharacterField() {
-            if (characterCount >= 5) return;
-            characterCount++;
-            const charDiv = document.createElement('div');
-            charDiv.className = 'sb-character-uploader';
-            charDiv.innerHTML = `<div class="sb-character-preview" id="char-preview-${characterCount}"></div><label for="char-upload-${characterCount}">Загрузить персонажа ${characterCount}</label><input type="file" id="char-upload-${characterCount}" accept="image/*" class="sb-character-file-input" style="display:none;"><span class="sb-character-filename">Файл не выбран</span>`;
-            charactersList.appendChild(charDiv);
-        }
-
-        function addAnswerField(container, cellIndex, isFirst = false) {
-            const answerCount = container.children.length;
-            if (answerCount >= 4) return;
-            const answerGroup = document.createElement('div');
-            answerGroup.className = 'sb-answer-group';
-            answerGroup.innerHTML = `<input type="radio" name="correct_answer_${cellIndex}" value="${answerCount}" ${isFirst ? 'checked' : ''}><input type="text" class="sb-answer-text" placeholder="Введите вариант ответа">`;
-            container.appendChild(answerGroup);
-        }
-
-        // *** НОВАЯ ЛОГИКА ПРЕДПРОСМОТРА ***
-        function updatePreview(cellIndex) {
-            const cellDetails = root.querySelector(`details[data-index='${cellIndex}']`);
-            if (!cellDetails) return;
-
-            const type = cellDetails.querySelector('.sb-cell-type').value;
-            previewModal.innerHTML = ''; // Очищаем предпросмотр
-
-            if (type === 'normal') {
-                const question = cellDetails.querySelector('.sb-cell-question').value;
-                const questionP = document.createElement('p');
-                questionP.id = 'sb-preview-question';
-                questionP.textContent = question || 'Введите текст вопроса...';
-                
-                const answersDiv = document.createElement('div');
-                answersDiv.id = 'sb-preview-answers';
-
-                const answers = cellDetails.querySelectorAll('.sb-answer-group');
-                const correctRadio = cellDetails.querySelector(`input[name='correct_answer_${cellIndex}']:checked`);
-                const correctIndex = correctRadio ? parseInt(correctRadio.value, 10) : -1;
-
-                answers.forEach((ans, index) => {
-                    const text = ans.querySelector('.sb-answer-text').value;
-                    if (text) {
-                        const btn = document.createElement('div');
-                        btn.className = 'sb-preview-answer-btn';
-                        if (index === correctIndex) {
-                            btn.classList.add('correct');
-                        }
-                        btn.textContent = text;
-                        answersDiv.appendChild(btn);
-                    }
-                });
-                previewModal.appendChild(questionP);
-                previewModal.appendChild(answersDiv);
-
-            } else if (type === 'chest') {
-                previewModal.innerHTML = `${chestIconSVG} <span class="sb-preview-icon-label">Сундук (+1 жизнь)</span>`;
-            } else if (type === 'sword') {
-                previewModal.innerHTML = `${swordIconSVG} <span class="sb-preview-icon-label">Меч (-1 жизнь)</span>`;
-            }
-        }
-
-        // *** НОВАЯ ЛОГИКА СКРЫТИЯ ПОЛЕЙ ***
-        function toggleQuestionFields(cellDetails) {
-            const type = cellDetails.querySelector('.sb-cell-type').value;
-            const questionGroup = cellDetails.querySelector('.sb-cell-question-group');
-            const answersGroup = cellDetails.querySelector('.sb-cell-answers-group');
-            const shouldShow = (type === 'normal');
-            questionGroup.style.display = shouldShow ? 'block' : 'none';
-            answersGroup.style.display = shouldShow ? 'block' : 'none';
-        }
-
-        // --- Обработчики событий ---
-        addCharacterBtn.addEventListener('click', addCharacterField);
-
-        charactersList.addEventListener('change', e => {
-             if (e.target.classList.contains('sb-character-file-input')) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const previewDiv = e.target.parentElement.querySelector('.sb-character-preview');
-                        previewDiv.style.backgroundImage = `url(${event.target.result})`;
-                        previewDiv.dataset.base64 = event.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                    e.target.parentElement.querySelector('.sb-character-filename').textContent = file.name;
+                            <div class="sb-cell-answers-group">
+                                 <div class="sb-editor-form-group">
+                                    <label>Варианты ответа (отметьте правильный):</label>
+                                    <div class="sb-editor-answers-list"></div>
+                                    <button class="sb-editor-btn sb-add-answer-btn" style="font-size: 0.9em; padding: 8px 15px;">+ Добавить вариант</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    cellsAccordion.appendChild(details);
+                    const answersContainer = details.querySelector('.sb-editor-answers-list');
+                    addAnswerField(answersContainer, i, true);
+                    addAnswerField(answersContainer, i);
                 }
+                addCharacterField();
+                updatePreview(0); 
             }
-        });
 
-        cellsAccordion.addEventListener('click', e => {
-            if (e.target.classList.contains('sb-add-answer-btn')) {
-                e.preventDefault();
-                const contentDiv = e.target.closest('.sb-cell-content');
-                const cellIndex = contentDiv.closest('details').dataset.index;
-                const answersContainer = contentDiv.querySelector('.sb-editor-answers-list');
-                addAnswerField(answersContainer, cellIndex);
-            }
-        });
-
-        cellsAccordion.addEventListener('input', e => {
-            const details = e.target.closest('details');
-            if (details) {
-                const cellIndex = details.dataset.index;
-                if(e.target.classList.contains('sb-cell-type')) {
-                    toggleQuestionFields(details);
-                }
-                updatePreview(cellIndex);
-            }
-        });
-
-        cellsAccordion.addEventListener('toggle', e => {
-            if (e.target.open) {
-                const cellIndex = e.target.dataset.index;
-                updatePreview(cellIndex);
-            }
-        }, true);
-        
-        generateBtn.addEventListener('click', () => {
-            const config = {
-                lives: parseInt(root.querySelector('#sb-player-lives').value, 10),
-                background: root.querySelector('#sb-background-url').value,
-                characters: [],
-                cells: []
-            };
-            root.querySelectorAll('.sb-character-preview').forEach(preview => {
-                if (preview.dataset.base64) {
-                    config.characters.push(preview.dataset.base64);
-                }
-            });
-            root.querySelectorAll('#sb-cells-accordion details').forEach((details, index) => {
-                const type = details.querySelector('.sb-cell-type').value;
-                let cellData = { type };
-                if (type === 'normal') {
-                    const answers = [];
-                    details.querySelectorAll('.sb-answer-text').forEach(input => {
-                        if (input.value) answers.push(input.value);
-                    });
-                    const correctRadio = details.querySelector(`input[name='correct_answer_${index}']:checked`);
-                    cellData.question = details.querySelector('.sb-cell-question').value;
-                    cellData.answers = answers;
-                    cellData.correctIndex = correctRadio ? parseInt(correctRadio.value, 10) : 0;
-                }
-                config.cells.push(cellData);
-            });
-            // Валидация
-            if(config.characters.length === 0) { alert("Загрузите хотя бы одного персонажа!"); return; }
-            if(config.cells.some(c => c.type === 'normal' && (!c.question || c.answers.length < 2))) { alert("Для ячеек с заданием, пожалуйста, заполните вопрос и минимум 2 варианта ответа!"); return; }
-
-            const jsonConfig = JSON.stringify(config);
-            const base64Config = btoa(encodeURIComponent(jsonConfig)); // Улучшенное кодирование
-            const gameUrl = window.location.href.split('?')[0] + '?config=' + base64Config;
-            const iframeCode = `<div style="position: relative; width: 100%; padding-top: 75%;"><iframe src="${gameUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe></div>`;
-            
-            root.querySelector('#sb-generated-code').value = iframeCode;
-            root.querySelector('#sb-generated-code-container').style.display = 'block';
-        });
-
-        initEditor();
-        // При инициализации сразу применяем скрытие/показ полей для всех ячеек
-        root.querySelectorAll('#sb-cells-accordion details').forEach(toggleQuestionFields);
-    }
-    
-    // --- ЛОГИКА ИГРЫ (с исправлениями) ---
-    function runGame(config) {
-        editorContainer.style.display = 'none';
-        gameContainer.style.display = 'flex';
-        const gameState = { lives: config.lives, openedCells: 0, isGameOver: false };
-        // ... (остальные переменные игры)
-        const gameBackground = root.querySelector('#sb-game-background');
-        const playerAvatar = root.querySelector('#sb-player-avatar');
-        const livesContainer = root.querySelector('#sb-lives-container');
-        const playerShip = root.querySelector('#sb-player-ship');
-        const gameBoard = root.querySelector('#sb-game-board');
-        const charSelectModal = root.querySelector('#sb-character-select-modal');
-        const charList = root.querySelector('#sb-character-list');
-        const questionModal = root.querySelector('#sb-question-modal');
-        const questionText = root.querySelector('#sb-question-text');
-        const answersContainer = root.querySelector('#sb-answers-container');
-        const gameOverModal = root.querySelector('#sb-game-over-modal');
-        const gameOverTitle = root.querySelector('#sb-game-over-title');
-        const heartIcon = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-        
-        function initGame() {
-            if (config.background) {
-                root.style.backgroundImage = `url(${config.background})`;
-            }
-            config.characters.forEach(charUrl => {
+            function addCharacterField() {
+                if (characterCount >= 5) return;
+                characterCount++;
                 const charDiv = document.createElement('div');
-                charDiv.className = 'sb-character-choice';
-                charDiv.innerHTML = `<img src="${charUrl}" alt="Пират">`;
-                charDiv.addEventListener('click', () => selectCharacter(charUrl));
-                charList.appendChild(charDiv);
-            });
-            charSelectModal.style.display = 'flex';
-            for (let i = 0; i < 9; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'sb-game-cell';
-                cell.dataset.index = i;
-                cell.addEventListener('click', handleCellClick);
-                gameBoard.appendChild(cell);
+                charDiv.className = 'sb-character-uploader';
+                charDiv.style.marginBottom = '10px';
+                charDiv.innerHTML = `<div class="sb-character-preview" style="width:80px; height:80px; border: 2px dashed #ccc; background-size: cover; background-position: center; display: inline-block; vertical-align: middle; margin-right: 10px;"></div><label for="char-upload-${characterCount}" class="sb-editor-btn" style="padding: 8px 15px; font-size: 0.9em;">Загрузить ${characterCount}</label><input type="file" id="char-upload-${characterCount}" accept="image/*" class="sb-character-file-input" style="display:none;"><span class="sb-character-filename" style="margin-left: 10px;">Файл не выбран</span>`;
+                charactersList.appendChild(charDiv);
             }
-        }
-        function selectCharacter(charUrl) { playerAvatar.style.backgroundImage = `url(${charUrl})`; charSelectModal.style.display = 'none'; updateStatus(); }
-        function updateStatus() { livesContainer.innerHTML = Array(gameState.lives).fill(heartIcon).join(''); }
-        function handleCellClick(e) { if (gameState.isGameOver || e.target.classList.contains('opened')) return; const cell = e.target; const index = parseInt(cell.dataset.index, 10); cell.classList.add('opened'); animateShot(cell, () => openCell(cell, index)); }
-        function animateShot(targetCell, callback) {
-            // ... (анимация выстрела без изменений)
-            const cannonball = root.querySelector('#sb-cannonball'); const shipRect = playerShip.getBoundingClientRect(); const cellRect = targetCell.getBoundingClientRect(); const rootRect = root.getBoundingClientRect(); const startX = shipRect.left + shipRect.width / 2 - rootRect.left; const startY = shipRect.top + shipRect.height / 2 - rootRect.top; const endX = cellRect.left + cellRect.width / 2 - rootRect.left; const endY = cellRect.top + cellRect.height / 2 - rootRect.top; cannonball.style.left = `${startX}px`; cannonball.style.top = `${startY}px`; cannonball.style.display = 'block'; cannonball.animate([ { transform: 'translate(0, 0) scale(1)' }, { transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0.5)` } ], { duration: 500, easing: 'ease-in-out' }).onfinish = () => { cannonball.style.display = 'none'; animateExplosion(targetCell, callback); };
-        }
-        function animateExplosion(targetCell, callback) {
-            // ... (анимация взрыва без изменений)
-            const explosion = root.querySelector('#sb-explosion'); const cellRect = targetCell.getBoundingClientRect(); const rootRect = root.getBoundingClientRect(); explosion.style.left = `${cellRect.left - rootRect.left}px`; explosion.style.top = `${cellRect.top - rootRect.top}px`; explosion.style.display = 'block'; explosion.animate([ { transform: 'scale(0)', opacity: 1 }, { transform: 'scale(1.5)', opacity: 0 } ], { duration: 400, easing: 'ease-out' }).onfinish = () => { explosion.style.display = 'none'; if (callback) callback(); };
-        }
-        
-        // *** ИСПРАВЛ) {
-                endGame(false);
-                return;
+
+            function addAnswerField(container, cellIndex, isFirst = false) {
+                const answerCount = container.children.length;
+                if (answerCount >= 4) return;
+                const answerGroup = document.createElement('div');
+                answerGroup.className = 'sb-answer-group';
+                answerGroup.innerHTML = `<input type="radio" name="correct_answer_${cellIndex}" value="${answerCount}" ${isFirst ? 'checked' : ''} style="flex-shrink: 0;"><input type="text" class="sb-answer-text" placeholder="Введите вариант ответа" style="flex-grow: 1;">`;
+                container.appendChild(answerGroup);
             }
-            
-            if (showQuestionFlow) {
-                setTimeout(() => showQuestion(index), 300);
-            } else {
-                // Если не было вопроса, сразу проверяем на победу
-                if (gameState.openedCells === 9) {
-                    endGame(true);
+
+            function updatePreview(cellIndex) {
+                const cellDetails = root.querySelector(`details[data-index='${cellIndex}']`);
+                if (!cellDetails) return;
+                const type = cellDetails.querySelector('.sb-cell-type').value;
+                previewModal.innerHTML = '';
+                if (type === 'normal') {
+                    const question = cellDetails.querySelector('.sb-cell-question').value;
+                    const questionP = document.createElement('p');
+                    questionP.id = 'sb-preview-question';
+                    questionP.textContent = question || 'Введите текст вопроса...';
+                    const answersDiv = document.createElement('div');
+                    answersDiv.id = 'sb-preview-answers';
+                    const answers = cellDetails.querySelectorAll('.sb-answer-group');
+                    const correctRadio = cellDetails.querySelector(`input[name='correct_answer_${cellIndex}']:checked`);
+                    const correctIndex = correctRadio ? parseInt(correctRadio.value, 10) : -1;
+                    answers.forEach((ans, index) => {
+                        const text = ans.querySelector('.sb-answer-text').value;
+                        if (text) {
+                            const btn = document.createElement('div');
+                            btn.className = 'sb-preview-answer-btn';
+                            if (index === correctIndex) btn.classList.add('correct');
+                            btn.textContent = text;
+                            answersDiv.appendChild(btn);
+                        }
+                    });
+                    previewModal.appendChild(questionP);
+                    previewModal.appendChild(answersDiv);
+                } else if (type === 'chest') {
+                    previewModal.innerHTML = `${chestIconSVG} <span class="sb-preview-icon-label">Сундук (+1 жизнь)</span>`;
+                } else if (type === 'sword') {
+                    previewModal.innerHTML = `${swordIconSVG} <span class="sb-preview-icon-label">Меч (-1 жизнь)</span>`;
                 }
             }
-        }
+            
+            function toggleQuestionFields(cellDetails) {
+                const type = cellDetails.querySelector('.sb-cell-type').value;
+                const questionGroup = cellDetails.querySelector('.sb-cell-question-group');
+                const answersGroup = cellDetails.querySelector('.sb-cell-answers-group');
+                const shouldShow = (type === 'normal');
+                questionGroup.style.display = shouldShow ? 'block' : 'none';
+                answersGroup.style.display = shouldShow ? 'block' : 'none';
+            }
 
-        function showQuestion(index) {
-            const cellData = config.cells[index];
-            questionText.textContent = cellData.question;
-            answersContainer.innerHTML = '';
-            cellData.answers.forEach((answerText, answerIndex) => {
-                const button = document.createElement('button');
-                button.className = 'sb-answer-btn';
-                button.textContent = answerText;
-                button.onclick = () => handleAnswer(answerIndex === cellData.correctIndex);
-                answersContainer.appendChild(button);
+            addCharacterBtn.addEventListener('click', addCharacterField);
+
+            charactersList.addEventListener('change', e => {
+                 if (e.target.classList.contains('sb-character-file-input')) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const previewDiv = e.target.parentElement.querySelector('.sb-character-preview');
+                            previewDiv.style.backgroundImage = `url(${event.target.result})`;
+                            previewDiv.dataset.base64 = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                        e.target.parentElement.querySelector('.sb-character-filename').textContent = file.name;
+                    }
+                }
             });
-            questionModal.style.display = 'flex';
+
+            cellsAccordion.addEventListener('click', e => {
+                if (e.target.classList.contains('sb-add-answer-btn')) {
+                    e.preventDefault();
+                    const contentDiv = e.target.closest('.sb-cell-content');
+                    const cellIndex = contentDiv.closest('details').dataset.index;
+                    const answersContainer = contentDiv.querySelector('.sb-editor-answers-list');
+                    addAnswerField(answersContainer, cellIndex);
+                }
+            });
+
+            cellsAccordion.addEventListener('input', e => {
+                const details = e.target.closest('details');
+                if (details) {
+                    const cellIndex = details.dataset.index;
+                    if(e.target.classList.contains('sb-cell-type')) {
+                        toggleQuestionFields(details);
+                    }
+                    updatePreview(cellIndex);
+                }
+            });
+
+            cellsAccordion.addEventListener('toggle', e => {
+                if (e.target.open) {
+                    const cellIndex = e.target.dataset.index;
+                    updatePreview(cellIndex);
+                }
+            }, true);
+            
+            generateBtn.addEventListener('click', () => {
+                const config = {
+                    lives: parseInt(root.querySelector('#sb-player-lives').value, 10),
+                    background: root.querySelector('#sb-background-url').value,
+                    characters: [],
+                    cells: []
+                };
+                root.querySelectorAll('.sb-character-preview').forEach(preview => {
+                    if (preview.dataset.base64) config.characters.push(preview.dataset.base64);
+                });
+                root.querySelectorAll('#sb-cells-accordion details').forEach((details, index) => {
+                    const type = details.querySelector('.sb-cell-type').value;
+                    let cellData = { type };
+                    if (type === 'normal') {
+                        const answers = [];
+                        details.querySelectorAll('.sb-answer-text').forEach(input => { if (input.value) answers.push(input.value); });
+                        const correctRadio = details.querySelector(`input[name='correct_answer_${index}']:checked`);
+                        cellData.question = details.querySelector('.sb-cell-question').value;
+                        cellData.answers = answers;
+                        cellData.correctIndex = correctRadio ? parseInt(correctRadio.value, 10) : 0;
+                    }
+                    config.cells.push(cellData);
+                });
+
+                if(config.characters.length === 0) { alert("Загрузите хотя бы одного персонажа!"); return; }
+                if(config.cells.some(c => c.type === 'normal' && (!c.question || c.answers.length < 2))) { alert("Для ячеек с заданием, пожалуйста, заполните вопрос и минимум 2 варианта ответа!"); return; }
+
+                const jsonConfig = JSON.stringify(config);
+                const base64Config = btoa(encodeURIComponent(jsonConfig));
+                const gameUrl = window.location.href.split('?')[0] + '?config=' + base64Config;
+                const iframeCode = `<div style="position: relative; width: 100%; padding-top: 75%;"><iframe src="${gameUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe></div>`;
+                
+                root.querySelector('#sb-generated-code').value = iframeCode;
+                root.querySelector('#sb-generated-code-container').style.display = 'block';
+            });
+
+            initEditor();
+            root.querySelectorAll('#sb-cells-accordion details').forEach(toggleQuestionFields);
         }
         
-        function handleAnswer(isCorrect) {
-            questionModal.style.display = 'none';
-            if (!isCorrect) {
-                gameState.lives--;
+        function runGame(config) {
+            editorContainer.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            const gameState = { lives: config.lives, openedCells: 0, isGameOver: false };
+            const gameBackground = root.querySelector('#sb-game-background');
+            const playerAvatar = root.querySelector('#sb-player-avatar');
+            const livesContainer = root.querySelector('#sb-lives-container');
+            const playerShip = root.querySelector('#sb-player-ship');
+            const gameBoard = root.querySelector('#sb-game-board');
+            const charSelectModal = root.querySelector('#sb-character-select-modal');
+            const charList = root.querySelector('#sb-character-list-game');
+            const questionModal = root.querySelector('#sb-question-modal');
+            const questionText = root.querySelector('#sb-question-text');
+            const answersContainer = root.querySelector('#sb-answers-container');
+            const gameOverModal = root.querySelector('#sb-game-over-modal');
+            const gameOverTitle = root.querySelector('#sb-game-over-title');
+            const heartIcon = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+            
+            function initGame() {
+                if (config.background) root.style.backgroundImage = `url(${config.background})`;
+                config.characters.forEach(charUrl => {
+                    const charDiv = document.createElement('div');
+                    charDiv.className = 'sb-character-choice';
+                    charDiv.innerHTML = `<img src="${charUrl}" alt="Пират">`;
+                    charDiv.addEventListener('click', () => selectCharacter(charUrl));
+                    charList.appendChild(charDiv);
+                });
+                charSelectModal.style.display = 'flex';
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'sb-game-cell';
+                    cell.dataset.index = i;
+                    cell.addEventListener('click', handleCellClick);
+                    gameBoard.appendChild(cell);
+                }
+            }
+            function selectCharacter(charUrl) { playerAvatar.style.backgroundImage = `url(${charUrl})`; charSelectModal.style.display = 'none'; updateStatus(); }
+            function updateStatus() { livesContainer.innerHTML = Array(gameState.lives).fill(heartIcon).join(''); }
+            function handleCellClick(e) { if (gameState.isGameOver || e.target.classList.contains('opened')) return; const cell = e.target; const index = parseInt(cell.dataset.index, 10); cell.classList.add('opened'); animateShot(cell, () => openCell(cell, index)); }
+            function animateShot(targetCell, callback) {
+                const cannonball = root.querySelector('#sb-cannonball'); const shipRect = playerShip.getBoundingClientRect(); const cellRect = targetCell.getBoundingClientRect(); const rootRect = root.getBoundingClientRect(); const startX = shipRect.left + shipRect.width / 2 - rootRect.left; const startY = shipRect.top + shipRect.height / 2 - rootRect.top; const endX = cellRect.left + cellRect.width / 2 - rootRect.left; const endY = cellRect.top + cellRect.height / 2 - rootRect.top; cannonball.style.left = `${startX}px`; cannonball.style.top = `${startY}px`; cannonball.style.display = 'block'; cannonball.animate([ { transform: 'translate(0, 0) scale(1)' }, { transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0.5)` } ], { duration: 500, easing: 'ease-in-out' }).onfinish = () => { cannonball.style.display = 'none'; animateExplosion(targetCell, callback); };
+            }
+            function animateExplosion(targetCell, callback) {
+                const explosion = root.querySelector('#sb-explosion'); const cellRect = targetCell.getBoundingClientRect(); const rootRect = root.getBoundingClientRect(); explosion.style.left = `${cellRect.left - rootRect.left}px`; explosion.style.top = `${cellRect.top - rootRect.top}px`; explosion.style.display = 'block'; explosion.animate([ { transform: 'scale(0)', opacity: 1 }, { transform: 'scale(1.5)', opacity: 0 } ], { duration: 400, easing: 'ease-out' }).onfinish = () => { explosion.style.display = 'none'; if (callback) callback(); };
+            }
+            function openCell(cell, index) {
+                const cellData = config.cells[index];
+                gameState.openedCells++;
+                let showQuestionFlow = false;
+                if (cellData.type === 'chest') {
+                    gameState.lives = Math.min(10, gameState.lives + 1);
+                    cell.innerHTML = chestIconSVG.replace('sb-preview-icon', '');
+                } else if (cellData.type === 'sword') {
+                    gameState.lives--;
+                    cell.innerHTML = swordIconSVG.replace('sb-preview-icon', '');
+                } else {
+                    showQuestionFlow = true;
+                }
                 updateStatus();
                 if (gameState.lives <= 0) {
                     endGame(false);
                     return;
                 }
+                if (showQuestionFlow) {
+                    setTimeout(() => showQuestion(index), 300);
+                } else if (gameState.openedCells === 9) {
+                    endGame(true);
+                }
             }
-            if (gameState.openedCells === 9) {
-                endGame(true);
+            function showQuestion(index) {
+                const cellData = config.cells[index];
+                questionText.textContent = cellData.question;
+                answersContainer.innerHTML = '';
+                cellData.answers.forEach((answerText, answerIndex) => {
+                    const button = document.createElement('button');
+                    button.className = 'sb-answer-btn';
+                    button.textContent = answerText;
+                    button.onclick = () => handleAnswer(answerIndex === cellData.correctIndex);
+                    answersContainer.appendChild(button);
+                });
+                questionModal.style.display = 'flex';
             }
+            function handleAnswer(isCorrect) {
+                questionModal.style.display = 'none';
+                if (!isCorrect) {
+                    gameState.lives--;
+                    updateStatus();
+                    if (gameState.lives <= 0) {
+                        endGame(false);
+                        return;
+                    }
+                }
+                if (gameState.openedCells === 9) {
+                    endGame(true);
+                }
+            }
+            function startConfetti() { for (let i = 0; i < 100; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.animationDelay = Math.random() * 4 + 's'; confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; gameContainer.appendChild(confetti); } }
+            function endGame(isWin) { gameState.isGameOver = true; gameBoard.style.pointerEvents = 'none'; if (isWin) { gameOverTitle.textContent = "Победа!"; gameOverTitle.className = 'win'; startConfetti(); } else { gameOverTitle.textContent = "Поражение"; gameOverTitle.className = 'lose'; playerShip.classList.add('sinking'); } gameOverModal.style.display = 'flex'; }
+            
+            initGame();
         }
-        
-        // ... (остальные функции игры: startConfetti, endGame)
-        function startConfetti() { for (let i = 0; i < 100; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.animationDelay = Math.random() * 4 + 's'; confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; gameContainer.appendChild(confetti); } }
-        function endGame(isWin) { gameState.isGameOver = true; gameBoard.style.pointerEvents = 'none'; if (isWin) { gameOverTitle.textContent = "Победа!"; gameOverTitle.className = 'win'; startConfetti(); } else { gameOverTitle.textContent = "Поражение"; gameOverTitle.className = 'lose'; playerShip.classList.add('sinking'); } gameOverModal.style.display = 'flex'; }
-        
-        initGame();
-    }
-});
-</script>
-</div>
+    });
+    </script>
+</body>
+</html>
