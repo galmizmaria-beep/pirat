@@ -1,374 +1,513 @@
-<div id="FX_ROOT">
-
-<style>
-    /*
-     * Стили для кнопок-ответов. Вы можете изменять их, чтобы подогнать под дизайн вашей игры.
-    */
-    .answer-button {
-        padding: 12px 20px;         /* Внутренние отступы */
-        margin-bottom: 10px;        /* Внешний отступ снизу */
-        background-color: #0d47a1;  /* Темно-синий фон, морская тематика */
-        color: white;               /* Белый цвет текста */
-        border: 2px solid #bbdefb;  /* Светло-голубая рамка */
-        border-radius: 12px;        /* Скругление углов */
-        text-align: center;         /* Выравнивание текста по центру */
-        cursor: pointer;            /* Курсор в виде руки */
-        font-weight: bold;          /* Жирный шрифт */
-        transition: background-color 0.3s, transform 0.1s; /* Плавные переходы */
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Тень для объема */
-    }
-
-    /* Стиль для кнопки при наведении */
-    .answer-button:hover {
-        background-color: #1565c0; /* Более светлый синий при наведении */
-    }
-
-    /* Стиль для кнопки при нажатии */
-    .answer-button:active {
-        transform: scale(0.98) translateY(2px); /* Эффект нажатия */
-        box-shadow: 0 2px 3px rgba(0,0,0,0.2);
-    }
-
-    /*
-     * Контейнер для ответов внутри модального окна. 
-     * Использует Flexbox для расположения кнопок в столбик.
-    */
-    .answers-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-
-    // ===================================================================================
-    // 1. КОНФИГУРАЦИЯ ИГРЫ (Настраивается через метки в Genially)
-    // ===================================================================================
-    const gameConfig = {
-        initialLives: 3,        // Начальное количество жизней
-        questionTime: 20,       // Время на ответ (в секундах)
-        bonusTime: 10,          // Бонусное время от сундука (в секундах)
-        // Метки для элементов. Не меняйте их здесь, а присваивайте объектам в Genially.
-        labels: {
-            ship: 'ship',
-            cannonball: 'cannonball',
-            lifeIcon: 'life_icon',
-            timerDisplay: 'timer_display',
-            questionWindow: 'question_window',
-            questionText: 'question_text',
-            correctAnswer: 'correct_answer',
-            wrongAnswer: 'wrong_answer',
-            chestWindow: 'chest_window',
-            mineWindow: 'mine_window',
-            winScreen: 'win_screen',
-            loseScreen: 'lose_screen',
-            restartButton: 'restart_button',
-            gameBoard: 'game_board', // Добавлена метка для игрового поля
-            // Звуки
-            fireSound: 'fire_sound',
-            explosionSound: 'explosion_sound',
-            correctSound: 'correct_sound',
-            wrongSound: 'wrong_sound',
-            chestSound: 'chest_sound',
-            mineSound: 'mine_sound',
-            winSound: 'win_sound',
-            loseSound: 'lose_sound'
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Морской Бой - Тестовая версия</title>
+    <style>
+        /* --- ОБЩИЕ СТИЛИ --- */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #5c94fc; /* Цвет фона - голубой океан */
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
-    };
 
-    // ===================================================================================
-    // 2. ИГРОВОЕ СОСТОЯНИЕ (Не трогать)
-    // ===================================================================================
-    const gameState = {
-        currentLives: gameConfig.initialLives,
-        currentTimePerQuestion: gameConfig.questionTime,
-        availableCellIds: [],
-        isActionInProgress: false,
-        timerInterval: null
-    };
-
-    // ===================================================================================
-    // 3. ПОИСК ЭЛЕМЕНТОВ НА СЛАЙДЕ (Не трогать)
-    // ===================================================================================
-    const elements = {};
-
-    function findElement(label) {
-        // Ищем внутри корневого элемента игры для лучшей изоляции
-        const root = document.getElementById('genially-view-slide-container');
-        return root ? root.querySelector(`[data-genially-object-id][aria-label~="${label}"]`) : null;
-    }
-
-    function findElements(label) {
-        const root = document.getElementById('genially-view-slide-container');
-        return root ? root.querySelectorAll(`[data-genially-object-id][aria-label~="${label}"]`) : [];
-    }
-    
-    // ===================================================================================
-    // 4. ЛОГИКА ИГРЫ (Не трогать)
-    // ===================================================================================
-
-    function initGame() {
-        console.log("Sea Battle Game Initializing...");
-
-        // Находим все основные элементы
-        for (const key in gameConfig.labels) {
-            elements[key] = findElement(gameConfig.labels[key]);
+        /* --- ИГРОВОЙ КОНТЕЙНЕР --- */
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: url(https://i.imgur.com/8aKJZQv.jpg) no-repeat center center; /* Фоновое изображение моря */
+            background-size: cover;
+            border: 5px solid #3a5a40;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        elements.lifeIcons = Array.from(findElements(gameConfig.labels.lifeIcon));
 
-        // Находим все игровые клетки (cell1, cell2, ..., 9)
-        elements.cells = {};
-        for (let i = 1; i <= 9; i++) {
-            const cellId = `cell${i}`;
-            const cellElement = findElement(cellId);
-            if (cellElement) {
-                elements.cells[cellId] = {
-                    element: cellElement,
-                    crater: findElement(`crater${i}`),
-                    explosion: findElement(`explosion${i}`),
-                    content: findElement(`content${i}`), // иконка сундука или меча
-                    type: findElement(`type_${cellId}`) // элемент с типом (chest/mine)
-                };
-                gameState.availableCellIds.push(cellId);
-            }
+        /* --- ИГРОВЫЕ ЭЛЕМЕНТЫ --- */
+        .game-element {
+            position: absolute; /* Все элементы позиционируются абсолютно */
         }
         
-        // Настройка конфигурации из Genially (если есть)
-        const configLives = findElement('config_lives');
-        if (configLives) gameConfig.initialLives = parseInt(configLives.innerText, 10) || 3;
-        const configTime = findElement('config_time');
-        if (configTime) gameConfig.questionTime = parseInt(configTime.innerText, 10) || 20;
-        const configBonus = findElement('config_bonus');
-        if (configBonus) gameConfig.bonusTime = parseInt(configBonus.innerText, 10) || 10;
-
-        gameState.currentLives = gameConfig.initialLives;
-        gameState.currentTimePerQuestion = gameConfig.questionTime;
-
-        // Скрываем все, что не должно быть видно вначале
-        hide(elements.cannonball, elements.questionWindow, elements.chestWindow, elements.mineWindow, elements.winScreen, elements.loseScreen, elements.timerDisplay);
-        Object.values(elements.cells).forEach(cell => {
-            if (cell.crater) hide(cell.crater);
-            if (cell.explosion) hide(cell.explosion);
-            if (cell.content) hide(cell.content);
-        });
-
-        // Настраиваем слушатели
-        if (elements.ship) {
-            elements.ship.style.cursor = 'pointer';
-            elements.ship.addEventListener('click', fireCannon);
-        }
-        if (elements.restartButton) {
-            elements.restartButton.style.cursor = 'pointer';
-            elements.restartButton.addEventListener('click', () => window.location.reload());
+        #game_board {
+            top: 150px;
+            left: 275px;
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 10px;
         }
 
-        updateLivesDisplay();
-        console.log("Game Ready! Lives: " + gameState.currentLives);
-    }
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(0, 100, 200, 0.5);
+            border: 2px solid #a3d5ff;
+            border-radius: 5px;
+        }
 
-    function fireCannon() {
-        if (gameState.isActionInProgress || gameState.availableCellIds.length === 0) return;
-        gameState.isActionInProgress = true;
+        .crater {
+            width: 80px;
+            height: 80px;
+            background-color: #1e3a5f;
+            border-radius: 50%;
+            border: 3px dotted #5c94fc;
+            visibility: hidden; /* Изначально скрыт */
+        }
         
-        playSound(elements.fireSound);
-
-        const randomIndex = Math.floor(Math.random() * gameState.availableCellIds.length);
-        const targetCellId = gameState.availableCellIds[randomIndex];
-        const targetCell = elements.cells[targetCellId];
+        .explosion {
+            width: 100px;
+            height: 100px;
+            background: url(https://i.imgur.com/pYVj6Of.gif) no-repeat center center; /* GIF взрыва */
+            background-size: contain;
+            transform: translate(-10px, -10px);
+            visibility: hidden;
+        }
         
-        show(elements.cannonball);
-        elements.cannonball.style.transition = 'all 1s cubic-bezier(0.25, 0.5, 0.5, 1)';
-        elements.cannonball.style.left = targetCell.element.style.left;
-        elements.cannonball.style.top = targetCell.element.style.top;
+        .content-icon {
+            width: 60px;
+            height: 60px;
+            margin: 10px;
+            background-size: contain;
+            visibility: hidden;
+        }
+
+        #ship {
+            width: 150px;
+            height: 150px;
+            background: url(https://i.imgur.com/Y1N1a2H.png) no-repeat center center;
+            background-size: contain;
+            top: 430px;
+            left: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #ship:hover { transform: scale(1.05); }
+
+        #cannonball {
+            width: 30px;
+            height: 30px;
+            background-color: #333;
+            border-radius: 50%;
+            top: 480px; /* Начальная позиция у пушки */
+            left: 170px;
+            visibility: hidden;
+        }
         
-        setTimeout(() => {
-            hide(elements.cannonball);
-            elements.cannonball.style.transition = 'none';
-            // Не обязательно возвращать ядро, т.к. его начальные координаты берутся из DOM
-            handleHit(targetCellId);
-        }, 1000);
-    }
-    
-    function handleHit(cellId) {
-        const cell = elements.cells[cellId];
-        playSound(elements.explosionSound);
+        #hud {
+            top: 20px;
+            left: 20px;
+        }
 
-        if(cell.explosion) show(cell.explosion);
+        .life_icon {
+            width: 40px;
+            height: 40px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            border: 2px solid white;
+        }
 
-        setTimeout(() => {
-            if(cell.explosion) hide(cell.explosion);
-            if(cell.element) hide(cell.element);
-            if(cell.crater) show(cell.crater);
+        #timer_display {
+            top: 25px;
+            right: 30px;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        /* --- МОДАЛЬНЫЕ ОКНА --- */
+        .modal-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden; /* Скрыты по умолчанию */
+        }
+
+        .modal-content {
+            background-color: #3a5a40;
+            padding: 30px;
+            border-radius: 10px;
+            border: 3px solid #a3b18a;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        #question_text {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        
+        /* Стили для кнопок-ответов */
+        .answer-button {
+            padding: 12px 20px; margin-bottom: 10px; background-color: #588157;
+            color: white; border: 2px solid #a3b18a; border-radius: 12px; text-align: center;
+            cursor: pointer; font-weight: bold; transition: background-color 0.3s, transform 0.1s;
+        }
+        .answer-button:hover { background-color: #3a5a40; }
+        .answer-button:active { transform: scale(0.98); }
+        .answers-container { display: flex; flex-direction: column; justify-content: center; }
+
+        /* --- ЭКРАНЫ ФИНАЛА --- */
+        .final-screen h1 { font-size: 4em; text-shadow: 3px 3px 5px #000; }
+        .final-screen p { font-size: 1.5em; }
+        #restart_button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #e63946;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================= HTML СТРУКТУРА ИГРЫ ======================= -->
+    <div id="game-container">
+
+        <!-- Игровое поле -->
+        <div id="game_board" class="game-element">
+            <!-- Ряд 1 -->
+            <div id="cell1" class="cell"></div>
+            <div id="cell2" class="cell"></div>
+            <div id="cell3" class="cell"></div>
+            <!-- Ряд 2 -->
+            <div id="cell4" class="cell"></div>
+            <div id="cell5" class="cell"></div>
+            <div id="cell6" class="cell"></div>
+            <!-- Ряд 3 -->
+            <div id="cell7" class="cell"></div>
+            <div id="cell8" class="cell"></div>
+            <div id="cell9" class="cell"></div>
+        </div>
+
+        <!-- Эффекты для клеток (скрыты) -->
+        <div id="effects-layer" style="position: absolute; top: 150px; left: 275px;">
+            <!-- Воронки -->
+            <div id="crater1" class="crater" style="top: 0; left: 0;"></div>
+            <div id="crater2" class="crater" style="top: 0; left: 90px;"></div>
+            <!-- ... добавьте остальные воронки по аналогии ... -->
             
-            gameState.availableCellIds = gameState.availableCellIds.filter(id => id !== cellId);
+            <!-- Взрывы -->
+            <div id="explosion1" class="explosion" style="top: 0; left: 0;"></div>
+            <div id="explosion2" class="explosion" style="top: 0; left: 90px;"></div>
+            <!-- ... добавьте остальные взрывы ... -->
+
+            <!-- Контент (сундуки, мины) -->
+            <div id="content1" class="content-icon" style="background-image: url(https://i.imgur.com/uR2R1Jd.png); top: 0; left: 0;"></div> <!-- Сундук -->
+            <div id="content2" class="content-icon" style="background-image: url(https://i.imgur.com/j6s6rYg.png); top: 0; left: 90px;"></div> <!-- Мина -->
+        </div>
+
+        <!-- Интерфейс -->
+        <div id="hud" class="game-element">
+            <div id="life_icon_1" class="life_icon"></div>
+            <div id="life_icon_2" class="life_icon"></div>
+            <div id="life_icon_3" class="life_icon"></div>
+        </div>
+        <div id="timer_display" class="game-element"></div>
+
+        <!-- Игровые объекты -->
+        <div id="ship" class="game-element"></div>
+        <div id="cannonball" class="game-element"></div>
+
+        <!-- Модальные окна -->
+        <div id="question_window" class="modal-overlay">
+            <div class="modal-content">
+                <div id="question_text">Здесь будет текст вопроса</div>
+                <div class="answers-container">
+                    <!-- Кнопки ответов будут вставлены сюда скриптом -->
+                </div>
+            </div>
+        </div>
+        <div id="chest_window" class="modal-overlay">
+            <div class="modal-content"><h2>Сокровище!</h2><p>+10 секунд ко времени на ответ!</p></div>
+        </div>
+        <div id="mine_window" class="modal-overlay">
+             <div class="modal-content"><h2>Опасность!</h2><p>Вы потеряли одну жизнь!</p></div>
+        </div>
+
+        <!-- Экраны финала -->
+        <div id="win_screen" class="modal-overlay final-screen">
+            <div class="modal-content"><h1>ПОБЕДА!</h1><p>Вы великолепный капитан!</p></div>
+        </div>
+        <div id="lose_screen" class="modal-overlay final-screen">
+             <div class="modal-content"><h1>ПОРАЖЕНИЕ</h1><p>Ваш корабль потоплен...</p><div id="restart_button">Попробовать снова</div></div>
+        </div>
+    </div>
+
+    <!-- ======================= СКРЫТЫЕ ДАННЫЕ ИГРЫ ======================= -->
+    <div style="display: none;">
+        <!-- Настройки игры -->
+        <div id="config_lives">3</div>
+        <div id="config_time">20</div>
+        <div id="config_bonus">10</div>
+        
+        <!-- Типы клеток (здесь мы определяем, где сундук, а где мина) -->
+        <div id="type_cell1" data-type="chest"></div>
+        <div id="type_cell2" data-type="mine"></div>
+
+        <!-- Вопросы и ответы -->
+        <div id="q_cell3">
+            <div class="question_text">Столица Франции?</div>
+            <div class="correct_answer">Париж</div>
+            <div class="wrong_answer">Берлин</div>
+            <div class="wrong_answer">Лондон</div>
+        </div>
+        <div id="q_cell4">
+            <div class="question_text">Сколько будет 2 + 2 * 2?</div>
+            <div class="correct_answer">6</div>
+            <div class="wrong_answer">8</div>
+        </div>
+        <!-- ... добавьте остальные вопросы для cell5, cell6 и т.д. -->
+        
+    </div>
+
+    <!-- ======================= JAVASCRIPT ЛОГИКА ИГРЫ ======================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // КОНФИГУРАЦИЯ ИГРЫ
+            const gameConfig = {
+                initialLives: parseInt(document.getElementById('config_lives').innerText) || 3,
+                questionTime: parseInt(document.getElementById('config_time').innerText) || 20,
+                bonusTime: parseInt(document.getElementById('config_bonus').innerText) || 10,
+            };
+
+            // ИГРОВОЕ СОСТОЯНИЕ
+            const gameState = {
+                currentLives: gameConfig.initialLives,
+                currentTimePerQuestion: gameConfig.questionTime,
+                availableCellIds: [],
+                isActionInProgress: false,
+                timerInterval: null
+            };
+
+            // ПОИСК ЭЛЕМЕНТОВ (теперь ищем по ID)
+            const elements = {
+                ship: document.getElementById('ship'),
+                cannonball: document.getElementById('cannonball'),
+                lifeIcons: [document.getElementById('life_icon_1'), document.getElementById('life_icon_2'), document.getElementById('life_icon_3')],
+                timerDisplay: document.getElementById('timer_display'),
+                questionWindow: document.getElementById('question_window'),
+                chestWindow: document.getElementById('chest_window'),
+                mineWindow: document.getElementById('mine_window'),
+                winScreen: document.getElementById('win_screen'),
+                loseScreen: document.getElementById('lose_screen'),
+                restartButton: document.getElementById('restart_button'),
+                gameBoard: document.getElementById('game_board'),
+                cells: {}
+            };
             
-            if (cell.type) {
-                const specialType = cell.type.getAttribute('aria-label');
-                if (specialType.includes('chest')) {
-                    triggerChestBonus(cell);
-                } else if (specialType.includes('mine')) {
-                    triggerMinePenalty(cell);
-                } else {
-                     showQuestion(cellId);
+            // --- ЛОГИКА ИГРЫ (незначительно изменена для работы с ID) ---
+
+            function initGame() {
+                console.log("Sea Battle Game Initializing...");
+
+                // Находим все игровые клетки
+                for (let i = 1; i <= 9; i++) {
+                    const cellId = `cell${i}`;
+                    if (document.getElementById(cellId)) {
+                        elements.cells[cellId] = {
+                            element: document.getElementById(cellId),
+                            crater: document.getElementById(`crater${i}`),
+                            explosion: document.getElementById(`explosion${i}`),
+                            content: document.getElementById(`content${i}`),
+                            typeElement: document.getElementById(`type_${cellId}`)
+                        };
+                        gameState.availableCellIds.push(cellId);
+                    }
                 }
-            } else {
-                 showQuestion(cellId);
+
+                // Настраиваем слушатели
+                elements.ship.addEventListener('click', fireCannon);
+                elements.restartButton.addEventListener('click', () => window.location.reload());
+
+                updateLivesDisplay();
+                console.log("Game Ready!");
             }
 
-        }, 500); // Время анимации взрыва
-    }
-
-    function showQuestion(cellId) {
-        const questionGroup = findElement(`q_${cellId}`);
-        if (!questionGroup) {
-            console.error(`Question group for ${cellId} not found!`);
-            endTurn();
-            return;
-        }
-
-        const questionText = questionGroup.querySelector(`[aria-label~="${gameConfig.labels.questionText}"]`);
-        const correctAnswer = questionGroup.querySelector(`[aria-label~="${gameConfig.labels.correctAnswer}"]`);
-        const wrongAnswers = Array.from(questionGroup.querySelectorAll(`[aria-label~="${gameConfig.labels.wrongAnswer}"]`));
-        
-        elements.questionWindow.querySelector(`[aria-label~="${gameConfig.labels.questionText}"]`).innerHTML = questionText.innerHTML;
-        
-        const answersContainer = elements.questionWindow.querySelector('.answers-container');
-        if (!answersContainer) {
-            console.error("'.answers-container' not found inside 'question_window'");
-            endTurn();
-            return;
-        }
-        answersContainer.innerHTML = '';
-
-        const allAnswers = [correctAnswer, ...wrongAnswers].filter(Boolean).sort(() => Math.random() - 0.5);
-
-        allAnswers.forEach(answerEl => {
-            const button = document.createElement('div');
-            button.className = 'answer-button';
-            button.innerHTML = answerEl.innerHTML;
+            function fireCannon() {
+                if (gameState.isActionInProgress || gameState.availableCellIds.length === 0) return;
+                gameState.isActionInProgress = true;
+                
+                const randomIndex = Math.floor(Math.random() * gameState.availableCellIds.length);
+                const targetCellId = gameState.availableCellIds[randomIndex];
+                const targetCell = elements.cells[targetCellId];
+                
+                show(elements.cannonball);
+                elements.cannonball.style.transition = 'all 1s cubic-bezier(0.4, 0, 1, 1)';
+                // Получаем позицию клетки относительно контейнера
+                const targetX = targetCell.element.offsetLeft + elements.gameBoard.offsetLeft;
+                const targetY = targetCell.element.offsetTop + elements.gameBoard.offsetTop;
+                elements.cannonball.style.left = `${targetX + 25}px`;
+                elements.cannonball.style.top = `${targetY + 25}px`;
+                
+                setTimeout(() => {
+                    hide(elements.cannonball);
+                    elements.cannonball.style.transition = 'none';
+                    elements.cannonball.style.left = '170px'; // Возврат на исходную
+                    elements.cannonball.style.top = '480px';
+                    handleHit(targetCellId);
+                }, 1000);
+            }
             
-            if (answerEl.getAttribute('aria-label').includes(gameConfig.labels.correctAnswer)) {
-                button.addEventListener('click', handleCorrectAnswer, { once: true });
-            } else {
-                button.addEventListener('click', handleWrongAnswer, { once: true });
+            function handleHit(cellId) {
+                const cell = elements.cells[cellId];
+                if(cell.explosion) show(cell.explosion);
+
+                setTimeout(() => {
+                    if(cell.explosion) hide(cell.explosion);
+                    if(cell.element) hide(cell.element);
+                    if(cell.crater) show(cell.crater);
+                    
+                    gameState.availableCellIds = gameState.availableCellIds.filter(id => id !== cellId);
+                    
+                    if (cell.typeElement) {
+                        const specialType = cell.typeElement.dataset.type;
+                        if (specialType === 'chest') triggerChestBonus(cell);
+                        else if (specialType === 'mine') triggerMinePenalty(cell);
+                    } else {
+                        showQuestion(cellId);
+                    }
+                }, 500);
             }
-            answersContainer.appendChild(button);
+
+            function showQuestion(cellId) {
+                const questionGroup = document.getElementById(`q_${cellId}`);
+                if (!questionGroup) {
+                    console.warn(`Question for ${cellId} not found. Skipping.`);
+                    endTurn();
+                    return;
+                }
+
+                const questionText = questionGroup.querySelector('.question_text').innerHTML;
+                const correctAnswer = questionGroup.querySelector('.correct_answer').innerHTML;
+                const wrongAnswers = Array.from(questionGroup.querySelectorAll('.wrong_answer')).map(el => el.innerHTML);
+                
+                elements.questionWindow.querySelector('#question_text').innerHTML = questionText;
+                
+                const answersContainer = elements.questionWindow.querySelector('.answers-container');
+                answersContainer.innerHTML = '';
+
+                const allAnswers = [{text: correctAnswer, correct: true}, ...wrongAnswers.map(text => ({text, correct: false}))].sort(() => Math.random() - 0.5);
+
+                allAnswers.forEach(answer => {
+                    const button = document.createElement('div');
+                    button.className = 'answer-button';
+                    button.innerHTML = answer.text;
+                    button.addEventListener('click', answer.correct ? handleCorrectAnswer : handleWrongAnswer, { once: true });
+                    answersContainer.appendChild(button);
+                });
+                
+                show(elements.questionWindow);
+                startTimer();
+            }
+            
+            function handleCorrectAnswer() {
+                stopTimer();
+                hide(elements.questionWindow);
+                endTurn();
+            }
+
+            function handleWrongAnswer() {
+                stopTimer();
+                hide(elements.questionWindow);
+                loseLife();
+                endTurn();
+            }
+            
+            function triggerChestBonus(cell) {
+                if(cell.content) show(cell.content);
+                gameState.currentTimePerQuestion += gameConfig.bonusTime;
+                show(elements.chestWindow);
+                setTimeout(() => {
+                    hide(elements.chestWindow);
+                    endTurn();
+                }, 2000);
+            }
+
+            function triggerMinePenalty(cell) {
+                if(cell.content) show(cell.content);
+                show(elements.mineWindow);
+                setTimeout(() => {
+                    hide(elements.mineWindow);
+                    loseLife();
+                    endTurn();
+                }, 2000);
+            }
+            
+            function loseLife() {
+                if (gameState.currentLives > 0) {
+                    gameState.currentLives--;
+                    updateLivesDisplay();
+                }
+            }
+            
+            function updateLivesDisplay() {
+                elements.lifeIcons.forEach((icon, index) => {
+                    if (index < gameState.currentLives) show(icon);
+                    else hide(icon);
+                });
+            }
+
+            function endTurn() {
+                if (gameState.currentLives <= 0) {
+                    gameOver(false);
+                } else if (gameState.availableCellIds.length === 0) {
+                    gameOver(true);
+                } else {
+                    gameState.isActionInProgress = false;
+                }
+            }
+            
+            function gameOver(isWin) {
+                gameState.isActionInProgress = true;
+                hide(elements.ship, elements.gameBoard, ...elements.lifeIcons, elements.timerDisplay);
+
+                if (isWin) show(elements.winScreen);
+                else show(elements.loseScreen);
+            }
+
+            function startTimer() {
+                let timeLeft = gameState.currentTimePerQuestion;
+                show(elements.timerDisplay);
+                elements.timerDisplay.innerText = timeLeft;
+
+                gameState.timerInterval = setInterval(() => {
+                    timeLeft--;
+                    elements.timerDisplay.innerText = timeLeft;
+                    if (timeLeft <= 0) {
+                        handleWrongAnswer();
+                    }
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(gameState.timerInterval);
+                hide(elements.timerDisplay);
+            }
+
+            // Вспомогательные функции
+            function show(...els) { els.forEach(el => el && (el.style.visibility = 'visible')); }
+            function hide(...els) { els.forEach(el => el && (el.style.visibility = 'hidden')); }
+            
+            // Запуск игры
+            initGame();
         });
-        
-        show(elements.questionWindow);
-        startTimer();
-    }
-    
-    function handleCorrectAnswer() {
-        stopTimer();
-        playSound(elements.correctSound);
-        hide(elements.questionWindow);
-        endTurn();
-    }
+    </script>
 
-    function handleWrongAnswer() {
-        stopTimer();
-        playSound(elements.wrongSound);
-        hide(elements.questionWindow);
-        loseLife();
-        endTurn();
-    }
-    
-    function triggerChestBonus(cell) {
-        if(cell.content) show(cell.content);
-        playSound(elements.chestSound);
-        gameState.currentTimePerQuestion += gameConfig.bonusTime;
-        show(elements.chestWindow);
-        setTimeout(() => {
-            hide(elements.chestWindow);
-            endTurn();
-        }, 2000);
-    }
-
-    function triggerMinePenalty(cell) {
-        if(cell.content) show(cell.content);
-        playSound(elements.mineSound);
-        show(elements.mineWindow);
-        setTimeout(() => {
-            hide(elements.mineWindow);
-            loseLife();
-            endTurn();
-        }, 2000);
-    }
-    
-    function loseLife() {
-        gameState.currentLives--;
-        updateLivesDisplay();
-    }
-    
-    function updateLivesDisplay() {
-        elements.lifeIcons.forEach((icon, index) => {
-            if (index < gameState.currentLives) {
-                show(icon);
-            } else {
-                hide(icon);
-            }
-        });
-    }
-
-    function endTurn() {
-        if (gameState.currentLives <= 0) {
-            gameOver(false); // Поражение
-            return;
-        }
-
-        if (gameState.availableCellIds.length === 0) {
-            gameOver(true); // Победа
-            return;
-        }
-        
-        gameState.isActionInProgress = false; // Разрешаем следующий ход
-    }
-    
-    function gameOver(isWin) {
-        gameState.isActionInProgress = true;
-        const allGameElements = [elements.ship, elements.gameBoard, elements.questionWindow, elements.chestWindow, elements.mineWindow, ...elements.lifeIcons];
-        hide(...allGameElements.filter(Boolean));
-
-        if (isWin) {
-            show(elements.winScreen);
-            playSound(elements.winSound);
-        } else {
-            show(elements.loseScreen);
-            playSound(elements.loseSound);
-        }
-    }
-
-    function startTimer() {
-        let timeLeft = gameState.currentTimePerQuestion;
-        show(elements.timerDisplay);
-        if(elements.timerDisplay) elements.timerDisplay.innerText = timeLeft;
-
-        gameState.timerInterval = setInterval(() => {
-            timeLeft--;
-            if(elements.timerDisplay) elements.timerDisplay.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                handleWrongAnswer(); // Время вышло = неверный ответ
-            }
-        }, 1000);
-    }
-
-    function stopTimer() {
-        clearInterval(gameState.timerInterval);
-        hide(elements.timerDisplay);
-    }
-
-    // Вспомогательные функции
-    function show(...els) { els.forEach(el => el && (el.style.visibility = 'visible')); }
-    function hide(...els) { els.forEach(el => el && (el.style.visibility = 'hidden')); }
-    function playSound(el) { if (el && typeof el.play === 'function') el.play(); }
-
-    // Запуск игры
-    // Небольшая задержка, чтобы Genially успел отрендерить все элементы
-    setTimeout(initGame, 300);
-});
-</script>
-
-</div>
+</body>
+</html>
