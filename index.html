@@ -28,112 +28,68 @@
         #sb-editor-container { width: 95%; height: 95%; max-width: 1400px; box-sizing: border-box; overflow: hidden; }
         .sb-editor-wrapper { display: flex; gap: 2vh; width: 100%; height: 100%; background: var(--parchment); border: 1.2vh solid var(--wood-dark); border-radius: 2vh; padding: 2vh; box-shadow: 0 0 2.5vh var(--shadow-color), 0 0 2vh var(--sea-water-glow) inset; box-sizing: border-box; }
         .sb-editor-main-panel { flex: 1.8; min-width: 0; display: flex; flex-direction: column; overflow-y: auto; padding-right: 1.5vh; }
-        .sb-editor-preview-panel { flex: 1; min-width: 0; }
         .sb-editor-main-panel::-webkit-scrollbar { width: 1.5vh; }
         .sb-editor-main-panel::-webkit-scrollbar-track { background: var(--wood-light); border-radius: 1vh; }
         .sb-editor-main-panel::-webkit-scrollbar-thumb { background: var(--wood-mid); border-radius: 1vh; border: 3px solid var(--wood-light); }
         .sb-editor-section { margin-bottom: 2.5vh; border-bottom: 3px dashed var(--wood-light); padding-bottom: 2.5vh; }
-        .sb-editor-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 1vh;}
+        .sb-editor-section:last-child { border-bottom: none; }
         h2 { text-align:center; font-size: 3.5vh; color: var(--wood-dark); margin: 0 0 2vh 0; text-shadow: 1px 1px 2px var(--wood-light); }
         h3 { font-size: 2.5vh; margin-top: 0; margin-bottom: 1.5vh; color: var(--text-dark); }
-        .sb-editor-form-group { margin-bottom: 1.5vh; }
-        .sb-editor-form-group label { display: block; margin-bottom: 0.8vh; font-size: 1.9vh; color: var(--text-dark); }
-        .sb-editor-form-group input[type="number"], .sb-editor-form-group textarea, .sb-editor-form-group select { width: 100%; padding: 1.2vh; font-size: 1.8vh; border-radius: 1vh; border: 2px solid var(--wood-mid); background: #fff; font-family: 'Pangolin', cursive; box-sizing: border-box; }
-        .sb-editor-form-group input[type="number"] { width: 10vh; }
-        .sb-editor-btn { padding: 1.2vh 2.4vh; font-size: 1.8vh; font-family: 'Pangolin', cursive; background: var(--wood-mid); color: var(--parchment); border: 2px solid var(--wood-dark); border-radius: 1vh; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 0.5vh 0 var(--wood-dark), 0 0 1vh var(--sea-water-glow); }
-        .sb-editor-btn:hover { transform: translateY(-0.3vh); box-shadow: 0 0.8vh 0 var(--wood-dark), 0 0 1.5vh var(--sea-water-glow); }
+        .sb-editor-btn { padding: 1.2vh 2.4vh; font-size: 1.8vh; font-family: 'Pangolin', cursive; background: var(--wood-mid); color: var(--parchment); border: 2px solid var(--wood-dark); border-radius: 1vh; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 0.5vh 0 var(--wood-dark); }
+        .sb-editor-btn:hover { transform: translateY(-0.3vh); box-shadow: 0 0.8vh 0 var(--wood-dark); }
         .sb-editor-btn:active { transform: translateY(0.2vh); box-shadow: 0 0.2vh 0 var(--wood-dark); }
         #sb-generate-btn { padding: 1.5vh; font-size: 2.2vh; width: 100%; }
-        #sb-copy-code-btn { padding: 1vh 1.8vh; }
-        #sb-add-character-btn { margin-top: 1.5vh; }
-        #sb-cells-accordion summary { padding: 1.2vh; font-size: 2vh; cursor: pointer; list-style: '⚓ '; color: var(--text-dark); }
-        #sb-cells-accordion details[open] summary { color: var(--wood-dark); }
-        #sb-cells-accordion .sb-cell-content { padding: 1.5vh 1.5vh 1.5vh 3vh; background: rgba(210, 180, 140, 0.2); border-radius: 1vh; }
+        #sb-cells-accordion summary { padding: 1.2vh; font-size: 2vh; cursor: pointer; list-style: '⚓ '; }
         .sb-character-uploader { display: flex; align-items: center; gap: 1.5vh; }
-        .sb-character-preview { width: 8vh; height: 8vh; border: 3px dashed var(--wood-mid); border-radius: 1vh; background-size: cover; background-position: center; flex-shrink: 0; }
-        .sb-character-filename { font-size: 1.6vh; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .sb-answer-group { display: flex; align-items: center; gap: 1vh; margin-bottom: 1vh; }
-        .sb-answer-group input[type="radio"] { width: 2vh; height: 2vh; flex-shrink: 0; }
+        .sb-character-preview { width: 8vh; height: 8vh; border: 3px dashed var(--wood-mid); border-radius: 1vh; background-size: cover; background-position: center; }
 
-        /* --- СТИЛИ ИГРЫ --- */
-        #sb-game-container { display: none; width: 100%; height: 100%; color: var(--text-dark); box-sizing: border-box; padding: 2vh; }
+        /* --- СТИЛИ ИГРЫ (для шаблона) --- */
         .sb-game-wrapper { display: flex; flex-direction: column; height: 100%; background: var(--parchment); border: 1.2vh solid var(--wood-dark); border-radius: 2vh; padding: 2vh; box-shadow: 0 0 2.5vh var(--shadow-color), 0 0 2vh var(--sea-water-glow) inset; box-sizing: border-box; }
         .sb-game-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1vh 2vh 1vh; }
-        .sb-game-character { display: flex; align-items: center; gap: 1.5vh; }
         .sb-game-character img { width: 8vh; height: 8vh; border-radius: 50%; border: 4px solid var(--wood-mid); }
-        .sb-game-lives { font-size: 3vh; }
         .sb-game-lives .heart { color: var(--danger-red); font-size: 4vh; }
         .sb-game-board { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 1.5vh; }
-        .sb-game-cell { background: var(--wood-light); border: 4px solid var(--wood-mid); border-radius: 1.5vh; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M25 50 C25 25, 75 25, 75 50 S125 75, 75 100 S25 75, 25 50' fill='none' stroke='%23a0522d' stroke-width='3'/%3E%3C/svg%3E"); background-size: 50%; background-repeat: no-repeat; background-position: center; }
-        .sb-game-cell:hover { transform: scale(1.05); box-shadow: 0 0 2vh var(--sea-water-glow); }
+        .sb-game-cell { background: var(--wood-light); border: 4px solid var(--wood-mid); border-radius: 1.5vh; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M25 50 C25 25, 75 25, 75 50 S125 75, 75 100 S25 75, 25 50' fill='none' stroke='%23a0522d' stroke-width='3'/%3E%3C/svg%3E"); background-size: 50%; background-repeat: no-repeat; background-position: center; }
         .sb-game-cell.opened { background-color: var(--parchment); cursor: default; }
-        .sb-game-cell.opened:hover { transform: none; box-shadow: none; }
         .sb-game-cell.success { background-color: #d4edda; border-color: var(--success-green); }
         .sb-game-cell.fail { background-color: #f8d7da; border-color: var(--danger-red); }
         .sb-game-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .sb-game-modal-content { background: var(--parchment); padding: 3vh; border-radius: 2vh; border: 1vh solid var(--wood-dark); text-align: center; max-width: 90%; width: 500px; box-shadow: 0 0 3vh #000; }
-        .sb-game-modal-content h4 { font-size: 3vh; margin: 0 0 2vh 0; }
+        .sb-game-modal-content { background: var(--parchment); padding: 3vh; border-radius: 2vh; border: 1vh solid var(--wood-dark); text-align: center; max-width: 90%; width: 500px; }
         .sb-game-modal-answers { display: grid; gap: 1.5vh; margin-top: 2vh; }
         .sb-game-answer-btn { padding: 1.5vh; font-size: 2vh; background: var(--wood-light); border: 3px solid var(--wood-mid); border-radius: 1vh; cursor: pointer; }
-        .sb-game-answer-btn:hover { background-color: var(--wood-mid); color: var(--parchment); }
-        .sb-game-event-icon { width: 15vh; height: 15vh; margin: auto; }
-        .sb-game-final-btn { margin-top: 3vh; padding: 1.5vh 3vh; font-size: 2.2vh; }
     </style>
 </head>
 <body>
     <div id="FX_ROOT">
-        <!-- Контейнер для редактора (скрывается в режиме игры) -->
-        <div id="sb-editor-container">
-            <div class="sb-editor-wrapper">
-                <div class="sb-editor-main-panel">
-                    <h2>Редактор 'Морской Бой'</h2>
-                    <div class="sb-editor-section"><h3>1. Общие настройки</h3><div class="sb-editor-form-group"><label for="sb-player-lives">Жизни игрока:</label><input type="number" id="sb-player-lives" value="3" min="1" max="10"></div></div>
-                    <div class="sb-editor-section"><h3>2. Персонажи</h3><div id="sb-characters-list-editor"></div><button id="sb-add-character-btn" class="sb-editor-btn">Добавить персонажа</button></div>
-                    <div class="sb-editor-section"><h3>3. Игровое поле</h3><div id="sb-cells-accordion"></div></div>
-                    <div class="sb-editor-section"><h3>4. Получить код</h3><button id="sb-generate-btn" class="sb-editor-btn">Сгенерировать код</button><div id="sb-generated-code-container" style="display: none; margin-top: 2vh;"><div style="display: flex; gap: 1vh; align-items: center;"><textarea id="sb-generated-code" readonly style="flex-grow: 1; height: 10vh; resize: none; font-size: 1.4vh;"></textarea><button id="sb-copy-code-btn" class="sb-editor-btn">Копировать</button></div></div></div>
-                </div>
-                <div class="sb-editor-preview-panel"><h3 style="text-align: center;">Предпросмотр</h3><div id="sb-editor-preview-container"><div id="sb-editor-preview-modal"></div></div></div>
-            </div>
-        </div>
-        <!-- Контейнер для игры (скрывается в режиме редактора) -->
-        <div id="sb-game-container"></div>
+        <!-- Этот div будет заменен на редактор или игру -->
     </div>
 
     <script>
-    // --- ГЛАВНЫЙ ПЕРЕКЛЮЧАТЕЛЬ: РЕДАКТОР ИЛИ ИГРА ---
-    document.addEventListener('DOMContentLoaded', () => {
-        // ИЗМЕНЕНИЕ: Читаем данные из URL hash (#) вместо query string (?)
-        const hash = window.location.hash.substring(1);
-        let configParam = null;
-        if (hash.startsWith('config=')) {
-            configParam = hash.substring('config='.length);
-        }
-
-        if (configParam) {
-            try {
-                // Если в URL есть хэш 'config', запускаем игру
-                const decodedConfig = JSON.parse(decodeURIComponent(atob(configParam)));
-                runGame(decodedConfig);
-            } catch (e) {
-                console.error("Failed to parse game config from hash:", e);
-                document.body.innerHTML = '<h1>Ошибка загрузки игры. Неверные данные конфигурации.</h1>';
-            }
-        } else {
-            // Иначе, запускаем редактор
-            runEditor();
-        }
-    });
+    // --- ГЛАВНЫЙ ПЕРЕКЛЮЧАТЕЛЬ ---
+    // В этой версии код игры находится в шаблоне. 
+    // Эта страница ВСЕГДА будет редактором.
+    document.addEventListener('DOMContentLoaded', runEditor);
 
     // --- ЛОГИКА РЕДАКТОРА ---
     function runEditor() {
         const root = document.getElementById('FX_ROOT');
+        root.innerHTML = `
+            <div id="sb-editor-container">
+                <div class="sb-editor-wrapper" style="flex-direction: column;">
+                    <h2>Редактор 'Морской Бой'</h2>
+                    <div class="sb-editor-main-panel">
+                        <div class="sb-editor-section"><h3>1. Общие настройки</h3><div><label>Жизни игрока:</label><input type="number" id="sb-player-lives" value="3" min="1" max="10"></div></div>
+                        <div class="sb-editor-section"><h3>2. Персонажи</h3><div id="sb-characters-list-editor"></div><button id="sb-add-character-btn" class="sb-editor-btn">Добавить персонажа</button></div>
+                        <div class="sb-editor-section"><h3>3. Игровое поле</h3><div id="sb-cells-accordion"></div></div>
+                        <div class="sb-editor-section"><h3>4. Сгенерировать страницу с игрой</h3><button id="sb-generate-btn" class="sb-editor-btn">Сгенерировать HTML-код</button><div id="sb-generated-code-container" style="display: none; margin-top: 2vh;"><div><label>Скопируйте этот код, создайте новый .html файл на GitHub и вставьте его туда:</label><textarea id="sb-generated-code" readonly style="width: 100%; height: 15vh; margin-top: 1vh; box-sizing: border-box;"></textarea></div></div></div>
+                    </div>
+                </div>
+            </div>`;
+
         let characterCount = 0;
-        const charactersList = root.querySelector('#sb-characters-list-editor');
         const addCharacterBtn = root.querySelector('#sb-add-character-btn');
         const cellsAccordion = root.querySelector('#sb-cells-accordion');
         const generateBtn = root.querySelector('#sb-generate-btn');
-        const copyBtn = root.querySelector('#sb-copy-code-btn');
-        const generatedCodeArea = root.querySelector('#sb-generated-code');
         
         function addCharacterField() {
             if (characterCount >= 5) { alert("Можно добавить не более 5 персонажей."); return; }
@@ -141,150 +97,165 @@
             const charDiv = document.createElement('div');
             charDiv.className = 'sb-character-uploader';
             charDiv.style.marginBottom = '1.5vh';
-            charDiv.innerHTML = `<div id="char-preview-${characterCount}" class="sb-character-preview"></div><label for="char-upload-${characterCount}" class="sb-editor-btn">Загрузить ${characterCount}</label><input type="file" id="char-upload-${characterCount}" data-preview-id="char-preview-${characterCount}" accept="image/*" class="sb-character-file-input" style="display:none;"><span id="char-filename-${characterCount}" class="sb-character-filename">Файл не выбран</span>`;
-            charactersList.appendChild(charDiv);
-        }
-
-        function addAnswerField(container, cellIndex, isFirst = false) {
-            const answerCount = container.children.length;
-            if (answerCount >= 4) return;
-            const answerGroup = document.createElement('div');
-            answerGroup.className = 'sb-answer-group';
-            answerGroup.innerHTML = `<input type="radio" name="correct_answer_${cellIndex}" value="${answerCount}" ${isFirst ? 'checked' : ''}><input type="text" class="sb-answer-text sb-editor-form-group" style="width:100%;" placeholder="Текст ответа ${answerCount + 1}">`;
-            container.appendChild(answerGroup);
-        }
-
-        function toggleQuestionFields(cellDetails) {
-            const type = cellDetails.querySelector('.sb-cell-type').value;
-            cellDetails.querySelector('.sb-cell-question-group').style.display = (type === 'normal') ? 'block' : 'none';
-            cellDetails.querySelector('.sb-cell-answers-group').style.display = (type === 'normal') ? 'block' : 'none';
+            charDiv.innerHTML = `<div id="char-preview-${characterCount}" class="sb-character-preview"></div><label for="char-upload-${characterCount}" class="sb-editor-btn">Загрузить ${characterCount}</label><input type="file" id="char-upload-${characterCount}" data-preview-id="char-preview-${characterCount}" accept="image/*" style="display:none;"><span id="char-filename-${characterCount}"></span>`;
+            root.querySelector('#sb-characters-list-editor').appendChild(charDiv);
         }
 
         function initEditor() {
             for (let i = 0; i < 9; i++) {
                 const details = document.createElement('details');
-                details.dataset.index = i;
-                details.innerHTML = `<summary>Ячейка ${i + 1}</summary><div class="sb-cell-content"><div class="sb-editor-form-group"><label>Тип ячейки:</label><select class="sb-cell-type"><option value="normal">Задание</option><option value="chest">Сундук (+1 жизнь)</option><option value="sword">Меч (-1 жизнь)</option></select></div><div class="sb-cell-question-group"><div class="sb-editor-form-group"><label>Текст задания:</label><textarea class="sb-cell-question" rows="3" placeholder="Введите вопрос..."></textarea></div></div><div class="sb-cell-answers-group"><div class="sb-editor-form-group"><label>Варианты ответа (отметьте правильный):</label><div class="sb-editor-answers-list"></div><button class="sb-editor-btn sb-add-answer-btn" style="font-size: 1.6vh; padding: 0.8vh 1.2vh; margin-top: 1vh;">+ Добавить ответ</button></div></div></div>`;
+                details.innerHTML = `<summary>Ячейка ${i + 1}</summary>
+                    <div>
+                        <p><label>Тип ячейки: <select class="sb-cell-type"><option value="normal">Задание</option><option value="chest">Сундук (+1)</option><option value="sword">Меч (-1)</option></select></label></p>
+                        <div class="sb-cell-question-group">
+                           <p><label>Вопрос: <input type="text" class="sb-cell-question"></label></p>
+                           <p>Ответы (первый - правильный):</p>
+                           <input type="text" placeholder="Правильный ответ"><br>
+                           <input type="text" placeholder="Неправильный ответ 1"><br>
+                           <input type="text" placeholder="Неправильный ответ 2"><br>
+                           <input type="text" placeholder="Неправильный ответ 3"><br>
+                        </div>
+                    </div>`;
                 cellsAccordion.appendChild(details);
-                const answersContainer = details.querySelector('.sb-editor-answers-list');
-                addAnswerField(answersContainer, i, true); addAnswerField(answersContainer, i);
             }
             addCharacterField();
-            root.querySelectorAll('#sb-cells-accordion details').forEach(toggleQuestionFields);
         }
 
-        addCharacterBtn.addEventListener('click', addCharacterField);
         document.body.addEventListener('change', e => {
-            if (e.target.classList.contains('sb-character-file-input')) {
-                const file = e.target.files[0]; const previewId = e.target.dataset.previewId; const previewDiv = document.getElementById(previewId); const fileNameSpan = document.getElementById(previewId.replace('preview', 'filename'));
+            if (e.target.matches('input[type="file"]')) {
+                const file = e.target.files[0]; const previewId = e.target.dataset.previewId; const previewDiv = document.getElementById(previewId);
                 if (file && previewDiv) {
                     const reader = new FileReader();
                     reader.onload = (event) => { previewDiv.style.backgroundImage = `url(${event.target.result})`; previewDiv.dataset.base64 = event.target.result; };
-                    reader.readAsDataURL(file); if (fileNameSpan) fileNameSpan.textContent = file.name;
+                    reader.readAsDataURL(file);
                 }
             }
         });
-        cellsAccordion.addEventListener('click', e => { if (e.target.classList.contains('sb-add-answer-btn')) { e.preventDefault(); const contentDiv = e.target.closest('.sb-cell-content'); const cellIndex = contentDiv.closest('details').dataset.index; const answersContainer = contentDiv.querySelector('.sb-editor-answers-list'); addAnswerField(answersContainer, cellIndex); } });
-        cellsAccordion.addEventListener('input', e => { const details = e.target.closest('details'); if (details && e.target.classList.contains('sb-cell-type')) { toggleQuestionFields(details); } });
+
+        addCharacterBtn.addEventListener('click', addCharacterField);
         
         generateBtn.addEventListener('click', () => {
-            const config = { lives: parseInt(root.querySelector('#sb-player-lives').value, 10), characters: [], cells: [] };
+            const config = { lives: parseInt(root.querySelector('#sb-player-lives').value), characters: [], cells: [] };
             root.querySelectorAll('.sb-character-preview').forEach(preview => { if (preview.dataset.base64) { config.characters.push(preview.dataset.base64); } });
-            if (config.characters.length === 0) { alert("Ошибка! Пожалуйста, загрузите хотя бы одного персонажа."); return; }
-            let validationError = false;
-            const cellsData = Array.from(root.querySelectorAll('#sb-cells-accordion details')).map((details, index) => {
-                const type = details.querySelector('.sb-cell-type').value; let cellData = { type };
+            if (config.characters.length === 0) { alert("Загрузите хотя бы одного персонажа."); return; }
+            
+            Array.from(root.querySelectorAll('#sb-cells-accordion details')).forEach(details => {
+                const type = details.querySelector('.sb-cell-type').value;
+                let cellData = { type };
                 if (type === 'normal') {
-                    const question = details.querySelector('.sb-cell-question').value.trim(); const answers = Array.from(details.querySelectorAll('.sb-answer-text')).map(input => input.value.trim()).filter(Boolean); const correctRadio = details.querySelector(`input[name='correct_answer_${index}']:checked`);
-                    if (!question || answers.length < 2) { validationError = true; details.open = true; const summary = details.querySelector('summary'); summary.style.border = '3px solid var(--danger-red)'; summary.style.borderRadius = '1vh'; summary.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { summary.style.border = ''; }, 3000); }
-                    cellData.question = question; cellData.answers = answers; cellData.correctIndex = correctRadio ? parseInt(correctRadio.value, 10) : 0;
-                } return cellData;
+                    const question = details.querySelector('.sb-cell-question').value.trim();
+                    const answers = Array.from(details.querySelectorAll('.sb-cell-question-group input[type="text"]')).map(input => input.value.trim()).filter(Boolean);
+                    if (!question || answers.length < 2) { alert('Для задания нужен вопрос и минимум 2 ответа.'); throw new Error("Validation failed"); }
+                    cellData.question = question;
+                    cellData.answers = answers;
+                }
+                config.cells.push(cellData);
             });
-            if (validationError) { alert('Ошибка! Для ячеек с типом "Задание" необходимо заполнить вопрос и как минимум 2 варианта ответа. Проблемная ячейка подсвечена красным.'); return; }
-            config.cells = cellsData;
-            const base64Config = btoa(encodeURIComponent(JSON.stringify(config)));
             
-            // ИЗМЕНЕНИЕ: Формируем URL с # вместо ?
-            const baseUrl = window.location.href.split('#')[0].split('?')[0];
-            const gameUrl = baseUrl + '#config=' + base64Config;
-            
-            const iframeCode = `<div style="position: relative; width: 100%; padding-top: 56.25%;"><iframe src="${gameUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe></div>`;
-            generatedCodeArea.value = iframeCode;
+            const generatedHTML = createGamePageTemplate(config);
+            const generatedCodeArea = root.querySelector('#sb-generated-code');
+            generatedCodeArea.value = generatedHTML;
             root.querySelector('#sb-generated-code-container').style.display = 'block';
-            generatedCodeArea.scrollIntoView({ behavior: 'smooth' });
+            generatedCodeArea.select();
         });
-        copyBtn.addEventListener('click', () => { navigator.clipboard.writeText(generatedCodeArea.value).then(() => { const originalText = copyBtn.textContent; copyBtn.textContent = 'Скопировано!'; copyBtn.style.backgroundColor = 'var(--success-green)'; setTimeout(() => { copyBtn.textContent = originalText; copyBtn.style.backgroundColor = ''; }, 2000); }).catch(err => { console.error('Ошибка копирования: ', err); alert('Не удалось скопировать код. Попробуйте вручную.'); }); });
         
         initEditor();
     }
 
-    // --- ЛОГИКА ИГРЫ ---
-    function runGame(config) {
-        document.getElementById('sb-editor-container').style.display = 'none';
-        const gameContainer = document.getElementById('sb-game-container');
-        gameContainer.style.display = 'block';
+    // --- ШАБЛОН СТРАНИЦЫ ИГРЫ ---
+    function createGamePageTemplate(config) {
+        // JSON.stringify(config) превращает объект с настройками в строку
+        // Эта строка будет вставлена прямо в HTML-код новой страницы
+        const configString = JSON.stringify(config);
 
-        let currentLives = config.lives;
-        let answeredQuestions = 0;
-        const totalQuestions = config.cells.filter(c => c.type === 'normal').length;
-        const playerCharacter = config.characters[Math.floor(Math.random() * config.characters.length)];
-        const iconProps = `xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="sb-game-event-icon"`;
-        const gameHTML = `<div class="sb-game-wrapper"><div class="sb-game-header"><div class="sb-game-character"><img src="${playerCharacter}"><span>Ваш Пират</span></div><div class="sb-game-lives"></div></div><div class="sb-game-board"></div></div>`;
-        gameContainer.innerHTML = gameHTML;
-        const board = gameContainer.querySelector('.sb-game-board');
-        const livesDisplay = gameContainer.querySelector('.sb-game-lives');
+        return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Морской Бой</title>
+    <style>
+        /* Здесь все те же стили, что и в редакторе, но только для игры */
+        @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+        :root { --sea-water-glow: #2de2e6; --wood-dark: #6a3805; --wood-mid: #a0522d; --wood-light: #d2b48c; --parchment: #f5eeda; --text-dark: #4a2c2a; --danger-red: #e74c3c; --success-green: #2ecc71; --shadow-color: rgba(0, 0, 0, 0.5); }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #333; }
+        #FX_ROOT { width: 100%; height: 100%; font-family: 'Pangolin', cursive; display: flex; justify-content: center; align-items: center; background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAoACgDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAYDBQcE/8QAIxAAAgEDAwUBAQAAAAAAAAAAAQIDBAURAAYSIQcTMRQiQf/EABkBAAMBAQEAAAAAAAAAAAAAAAMEBQIGAP/EAB4RAAICAgMAAwAAAAAAAAAAAAECAAMRIQQSEzFB/9oADAMBAAIRAxEAPwDVbbtdPV0sNVNULCsyLIsewkgEZGen7nQe9+HNDWQNLRSCnnydqONyH2Psf3Oie2L+nbqP/AKj/AEay953hS21WiiC1VXtP4434RT6Zuv7j71HPNyG7B4G/k5TcaW42msNNeaV4ZB0bhkfsynow9Gs1K8FZAksTrLE4yrqcqR8g1s+3bpobnRw1sRkCTLuAdSpHqpB6EEEfGsQ3bQPZt3Vjptxpa2TfAoP9qTqyj6PUH3+6U1V2oOQfZP1I7L2kSgY2s32y3SnuNIk9O+VPUdmQ+VPqDWKkkSNGeRgiKMszHAA9yakWDbjtC6WqWqkp2p1k7QxO2SRgHHGOvPOjO8dxbfeKGWgpJjUybkPmEbVGActzxkgce+tVvUeS8fWw4G5U7ju25X+s82dkgpwT5VMhyFHufUn6/YaXW+mrb1MKSkgeolPCogLEfU+g+Tqza7FuW5usjQ07wU+R5lS+EVR3PPUn2AJ1t+27TbrDSIlKqq8gAaeUDc7nuc9gPQDgajq22tqJ2+YF+z1Ea33W1Lb7fDTRMWWJNu5hyx7k/kk6yNdOkUbO7BVAySToXe93UdshYRv51QR8MaHhfufQfOsMvG4blflkSGY0VvY8xRtyzD0LN/gYH11NV2Z+q7hX6kht3c1LudyV1/uBp6Z2S2QNlUHBeQerfQeg/c6Q0lLT0MCwU0SQxL0VFAA/Y0+gjSGJIo1CIihVUDAAHQDWbS17iBVCgAfZ//Z'); }
+        #sb-game-container { display: block; width: 100%; height: 100%; color: var(--text-dark); box-sizing: border-box; padding: 2vh; }
+        .sb-game-wrapper { display: flex; flex-direction: column; height: 100%; background: var(--parchment); border: 1.2vh solid var(--wood-dark); border-radius: 2vh; padding: 2vh; box-shadow: 0 0 2.5vh var(--shadow-color), 0 0 2vh var(--sea-water-glow) inset; box-sizing: border-box; }
+        .sb-game-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1vh 2vh 1vh; }
+        .sb-game-character { display: flex; align-items: center; gap: 1.5vh; }
+        .sb-game-character img { width: 8vh; height: 8vh; border-radius: 50%; border: 4px solid var(--wood-mid); }
+        .sb-game-lives { font-size: 3vh; } .sb-game-lives .heart { color: var(--danger-red); font-size: 4vh; }
+        .sb-game-board { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 1.5vh; }
+        .sb-game-cell { background: var(--wood-light); border: 4px solid var(--wood-mid); border-radius: 1.5vh; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M25 50 C25 25, 75 25, 75 50 S125 75, 75 100 S25 75, 25 50' fill='none' stroke='%23a0522d' stroke-width='3'/%3E%3C/svg%3E"); background-size: 50%; background-repeat: no-repeat; background-position: center; }
+        .sb-game-cell:hover { transform: scale(1.05); box-shadow: 0 0 2vh var(--sea-water-glow); }
+        .sb-game-cell.opened { background-color: var(--parchment); cursor: default; } .sb-game-cell.opened:hover { transform: none; box-shadow: none; }
+        .sb-game-cell.success { background-color: #d4edda; border-color: var(--success-green); } .sb-game-cell.fail { background-color: #f8d7da; border-color: var(--danger-red); }
+        .sb-game-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .sb-game-modal-content { background: var(--parchment); padding: 3vh; border-radius: 2vh; border: 1vh solid var(--wood-dark); text-align: center; max-width: 90%; width: 500px; box-shadow: 0 0 3vh #000; }
+        .sb-game-modal-content h4 { font-size: 3vh; margin: 0 0 2vh 0; } .sb-game-modal-answers { display: grid; gap: 1.5vh; margin-top: 2vh; }
+        .sb-game-answer-btn { padding: 1.5vh; font-size: 2vh; background: var(--wood-light); border: 3px solid var(--wood-mid); border-radius: 1vh; cursor: pointer; }
+        .sb-game-answer-btn:hover { background-color: var(--wood-mid); color: var(--parchment); }
+        .sb-game-event-icon { width: 15vh; height: 15vh; margin: auto; } .sb-game-final-btn { margin-top: 3vh; padding: 1.5vh 3vh; font-size: 2.2vh; background: var(--wood-mid); color: var(--parchment); border: 2px solid var(--wood-dark); border-radius: 1vh; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="FX_ROOT">
+        <div id="sb-game-container"></div>
+    </div>
+    <script>
+        // Конфигурация игры вставляется сюда прямо из редактора
+        const config = ${configString};
 
-        function updateLives() { livesDisplay.innerHTML = `Жизни: ${Array(currentLives).fill('<span class="heart">♥</span>').join('')}`; }
-        function showModal(content) { const modal = document.createElement('div'); modal.className = 'sb-game-modal-overlay'; modal.innerHTML = `<div class="sb-game-modal-content">${content}</div>`; document.body.appendChild(modal); return modal; }
-        
-        function checkEndGame() {
-            if (currentLives <= 0) { showModal(`<h4>Поражение!</h4><p>У вас закончились жизни.</p><button class="sb-editor-btn sb-game-final-btn" onclick="location.reload()">Попробовать снова</button>`); } 
-            else if (totalQuestions > 0 && answeredQuestions === totalQuestions) { showModal(`<h4>Победа!</h4><p>Вы ответили на все вопросы и захватили сокровища!</p><button class="sb-editor-btn sb-game-final-btn" onclick="location.reload()">Играть еще раз</button>`); }
-        }
+        // Дальше идет ТОЛЬКО логика самой игры
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameContainer = document.getElementById('sb-game-container');
+            let currentLives = config.lives;
+            const playerCharacter = config.characters[Math.floor(Math.random() * config.characters.length)];
+            const iconProps = \`xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="sb-game-event-icon"\`;
+            
+            gameContainer.innerHTML = \`<div class="sb-game-wrapper"><div class="sb-game-header"><div class="sb-game-character"><img src="\${playerCharacter}"><span>Ваш Пират</span></div><div class="sb-game-lives"></div></div><div class="sb-game-board"></div></div>\`;
+            
+            const board = gameContainer.querySelector('.sb-game-board');
+            const livesDisplay = gameContainer.querySelector('.sb-game-lives');
 
-        function handleCellClick(cellElement, cellData) {
-            if (cellElement.classList.contains('opened') || currentLives <= 0) return;
-            cellElement.classList.add('opened');
-            switch (cellData.type) {
-                case 'chest':
-                    currentLives++; cellElement.classList.add('success');
-                    const chestModal = showModal(`<h4>Вы нашли сундук!</h4><svg ${iconProps} fill="#fef9e7" stroke="#8B4513" stroke-width="1.5"><path d="M2,9.5 L22,9.5 M3,10 L3,20 C3,21.1045695 3.8954305,22 5,22 L19,22 C20.1045695,22 21,21.1045695 21,20 L21,10 M4,9.5 C4,6.46243388 6.46243388,4 9.5,4 L14.5,4 C17.5375661,4 20,6.46243388 20,9.5 M12,9.5 L12,22 M9,14 L15,14"></path></svg><p>+1 жизнь!</p>`);
-                    setTimeout(() => chestModal.remove(), 2000);
-                    break;
-                case 'sword':
-                    currentLives--; cellElement.classList.add('fail');
-                    const swordModal = showModal(`<h4>Вы наткнулись на ловушку!</h4><svg ${iconProps} fill="none" stroke="#d9534f" stroke-width="2"><path d="M14.5 14.5L21 21"/><path d="M4 20l5-5"/><path d="M15 4l6 6"/><path d="M3 9l6 6"/><path d="M9 3l12 12"/><rect x="2" y="13" width="4" height="4" transform="rotate(-45 2 13)"/></svg><p>-1 жизнь!</p>`);
-                    setTimeout(() => swordModal.remove(), 2000);
-                    break;
-                case 'normal':
-                    let answersHTML = cellData.answers.map((answer, i) => `<button class="sb-game-answer-btn" data-index="${i}">${answer}</button>`).join('');
-                    const questionModal = showModal(`<h4>${cellData.question}</h4><div class="sb-game-modal-answers">${answersHTML}</div>`);
-                    questionModal.querySelector('.sb-game-modal-answers').addEventListener('click', e => {
-                        if (e.target.tagName === 'BUTTON') {
-                            const isCorrect = parseInt(e.target.dataset.index) === cellData.correctIndex;
-                            if (isCorrect) { answeredQuestions++; cellElement.classList.add('success'); } else { currentLives--; cellElement.classList.add('fail'); }
-                            questionModal.remove(); updateLives(); checkEndGame();
-                        }
-                    });
-                    return; // Не вызываем updateLives и checkEndGame сразу, ждем ответа
-            }
-            updateLives(); checkEndGame();
-        }
-        
-        config.cells.forEach(cellData => { const cell = document.createElement('div'); cell.className = 'sb-game-cell'; cell.addEventListener('click', () => handleCellClick(cell, cellData)); board.appendChild(cell); });
-        updateLives();
-        if (totalQuestions === 0) {
-            const cells = board.querySelectorAll('.sb-game-cell');
-            let openedCount = 0;
-            cells.forEach(cell => {
+            function updateLives() { livesDisplay.innerHTML = \`Жизни: \${Array(currentLives).fill('<span class="heart">♥</span>').join('')}\`; }
+            function showModal(content) { const modal = document.createElement('div'); modal.className = 'sb-game-modal-overlay'; modal.innerHTML = \`<div class="sb-game-modal-content">\${content}</div>\`; document.body.appendChild(modal); return modal; }
+            
+            function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+
+            config.cells.forEach(cellData => {
+                const cell = document.createElement('div');
+                cell.className = 'sb-game-cell';
+                board.appendChild(cell);
+
                 cell.addEventListener('click', () => {
-                    if(cell.classList.contains('opened')) openedCount++;
-                    if(openedCount === cells.length) {
-                        showModal(`<h4>Победа!</h4><p>Вы открыли все ячейки!</p><button class="sb-editor-btn sb-game-final-btn" onclick="location.reload()">Играть еще раз</button>`);
+                    if (cell.classList.contains('opened') || currentLives <= 0) return;
+                    cell.classList.add('opened');
+                    if (cellData.type === 'normal') {
+                        const correct = cellData.answers[0];
+                        const shuffledAnswers = shuffle([...cellData.answers]);
+                        let answersHTML = shuffledAnswers.map(answer => \`<button class="sb-game-answer-btn">\${answer}</button>\`).join('');
+                        const questionModal = showModal(\`<h4>\${cellData.question}</h4><div class="sb-game-modal-answers">\${answersHTML}</div>\`);
+                        questionModal.querySelector('.sb-game-modal-answers').addEventListener('click', e => {
+                            if (e.target.tagName === 'BUTTON') {
+                                if (e.target.textContent === correct) cell.classList.add('success');
+                                else { currentLives--; cell.classList.add('fail'); }
+                                questionModal.remove(); updateLives();
+                            }
+                        });
+                    } else {
+                        if (cellData.type === 'chest') { currentLives++; cell.classList.add('success'); } 
+                        else { currentLives--; cell.classList.add('fail'); }
+                        updateLives();
                     }
                 });
             });
-        }
+            updateLives();
+        });
+    <\/script>
+</body>
+</html>`;
     }
     </script>
 </body>
