@@ -10,16 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
     
     <style>
-        /* 
-         * =============================================
-         * НОВЫЕ СТИЛИ В ДУХЕ "GOLDEN QUEST"
-         * =============================================
-        */
-
+        /* =============================================
+         * ОБЩИЕ СТИЛИ
+         * ============================================= */
         body {
-            /* Используем новый шрифт и фон под старую бумагу/карту */
             font-family: 'IM Fell English SC', serif;
-            background-color: #f4e9d8; /* Цвет пергамента */
+            background-color: #f4e9d8;
             background-image: url('https://www.transparenttextures.com/patterns/crissxcross.png');
             margin: 0;
             display: flex;
@@ -29,18 +25,83 @@
             overflow: hidden;
         }
 
+        /* =============================================
+         * НОВИНКА: СТИЛИ СТАРТОВОГО ЭКРАНА
+         * ============================================= */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Прямая ссылка на ваш фон */
+            background: url(https://raw.githubusercontent.com/galmizmaria-beep/pirat/main/%D0%B3%D0%BE%D1%82%D0%BE%D0%B2%D1%8B%D0%B8%CC%86%20%D1%84%D0%BE%D0%BD.png) no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        #start-button {
+            position: absolute;
+            bottom: 120px; /* Располагаем кнопку внизу */
+            padding: 15px 40px;
+            font-size: 3em; /* Крупный размер шрифта */
+            color: #5d2b1c; /* Цвет, взятый с заголовка */
+            text-shadow: 2px 2px 0px #d4a775; /* Тень, как у заголовка */
+            background: none;
+            border: none;
+            cursor: pointer;
+            animation: pulse 2s infinite; /* Применяем анимацию пульсации */
+        }
+
+        #loading-bar-container {
+            position: absolute;
+            bottom: 60px; /* Под кнопкой "Играть" */
+            width: 400px;
+            height: 20px;
+            background-color: rgba(0,0,0,0.3);
+            border: 2px solid #6b4f35;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #loading-bar-progress {
+            width: 0%;
+            height: 100%;
+            background-color: #d4a775;
+            border-radius: 8px;
+            animation: load 2.5s ease-out forwards; /* Анимация заполнения */
+        }
+        
+        /* Анимация пульсации для кнопки */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* Анимация для полосы загрузки */
+        @keyframes load {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        /* =============================================
+         * СТИЛИ ИГРОВОГО ЭКРАНА
+         * ============================================= */
         #game-container {
             position: relative;
             width: 800px;
             height: 600px;
-            /* Убираем фон-картинку, теперь он будет на всем body */
             background-color: transparent;
-            /* Рамка в стиле старого дерева */
             border: 15px solid #6b4f35;
             border-image: url(https://i.postimg.cc/yN1T9T6T/wood-frame.png) 30 stretch;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            color: #4a3728; /* Темно-коричневый цвет текста */
+            color: #4a3728;
         }
 
         .game-element { position: absolute; }
@@ -54,229 +115,158 @@
             gap: 10px;
         }
 
-        /* Клетки стилизованы под воду на карте */
         .cell {
-            width: 80px;
-            height: 80px;
-            background-color: #a2d2ff;
-            border: 2px solid #5c85a6;
-            border-radius: 5px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
+            width: 80px; height: 80px; background-color: #a2d2ff;
+            border: 2px solid #5c85a6; border-radius: 5px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3); transition: transform 0.2s;
         }
-        .cell:hover {
-            transform: scale(1.05);
-        }
+        .cell:hover { transform: scale(1.05); }
 
-        /* Воронка - темная вода */
-        .crater {
-            width: 80px;
-            height: 80px;
-            background-color: #3d5a80;
-            border-radius: 50%;
-            border: 3px dashed #98c1d9;
-            visibility: hidden;
-        }
+        .crater { width: 80px; height: 80px; background-color: #3d5a80; border-radius: 50%; border: 3px dashed #98c1d9; visibility: hidden; }
         
-        .explosion {
-            width: 100px;
-            height: 100px;
-            background: url(https://i.postimg.cc/W3tY4X2s/explosion.gif) no-repeat center center;
-            background-size: contain;
-            transform: translate(-10px, -10px);
-            visibility: hidden;
-        }
+        .explosion { width: 100px; height: 100px; background: url(https://i.postimg.cc/W3tY4X2s/explosion.gif) no-repeat center center; background-size: contain; transform: translate(-10px, -10px); visibility: hidden; }
         
-        .content-icon {
-            width: 60px;
-            height: 60px;
-            margin: 10px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            visibility: hidden;
-        }
+        .content-icon { width: 60px; height: 60px; margin: 10px; background-size: contain; background-repeat: no-repeat; background-position: center; visibility: hidden; }
 
-        /* --- ИЗМЕНЕНИЕ 1: Новый персонаж вместо корабля --- */
+        /* --- ИЗМЕНЕНИЕ: Новый персонаж --- */
         #ship {
-            width: 180px; /* Увеличили ширину */
-            height: 250px; /* Увеличили высоту */
-            /* Прямая ссылка на вашего персонажа с GitHub */
-            background: url(https://raw.githubusercontent.com/galmizmaria-beep/pirat/main/%D0%94%D0%B8%D0%B7%D0%B0%D0%B8%CC%86%D0%BD%20%D0%B1%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.png) no-repeat center bottom;
+            width: 150px;   /* Скорректировали размер */
+            height: 200px;
+            /* Прямая ссылка на вашего НОВОГО персонажа с GitHub */
+            background: url(https://raw.githubusercontent.com/galmizmaria-beep/pirat/main/%D0%94%D0%B8%D0%B7%D0%B0%D0%B8%CC%86%D0%BD%20%D0%B1%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20(1).png) no-repeat center bottom;
             background-size: contain;
-            top: 340px; /* Скорректировали позицию по вертикали */
-            left: 30px; /* Скорректировали позицию по горизонтали */
+            top: 390px;
+            left: 40px;
             cursor: pointer;
             transition: transform 0.2s;
         }
         #ship:hover { transform: scale(1.05); }
 
-        /* --- ИЗМЕНЕНИЕ 2: Новая стартовая позиция для ядра --- */
+        /* --- ИЗМЕНЕНИЕ: Новая позиция ядра --- */
         #cannonball {
-            width: 30px;
-            height: 30px;
-            background-color: #333;
-            border-radius: 50%;
-            top: 450px; /* Сместили, чтобы было на уровне рук персонажа */
-            left: 150px; /* Сместили правее */
+            width: 30px; height: 30px; background-color: #333; border-radius: 50%;
+            top: 480px; /* Скорректировали */
+            left: 140px; /* Скорректировали */
             visibility: hidden;
         }
         
-        /* Иконки жизней - теперь сердечки PNG */
         #hud { top: 20px; left: 20px; }
-        .life_icon {
-            width: 40px;
-            height: 40px;
-            background: url(https://i.postimg.cc/D0A8GfV4/heart-icon.png) no-repeat center center;
-            background-size: contain;
-            display: inline-block;
-            margin-right: 5px;
-            /* Убираем старый фон и рамку */
-        }
+        .life_icon { width: 40px; height: 40px; background: url(https://i.postimg.cc/D0A8GfV4/heart-icon.png) no-repeat center center; background-size: contain; display: inline-block; margin-right: 5px; }
         
-        /* Таймер в стиле старых цифр */
-        #timer_display {
-            top: 15px;
-            right: 30px;
-            font-size: 3.5em;
-            font-weight: bold;
-            color: #c92a2a;
-            text-shadow: 2px 2px 2px #6b4f35;
-        }
+        #timer_display { top: 15px; right: 30px; font-size: 3.5em; font-weight: bold; color: #c92a2a; text-shadow: 2px 2px 2px #6b4f35; }
 
-        .modal-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            visibility: hidden;
-        }
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; visibility: hidden; }
         
-        /* Модальные окна в стиле пергамента/свитка */
-        .modal-content {
-            background-color: #f4e9d8;
-            padding: 40px;
-            border-radius: 5px;
-            border: 10px solid transparent;
-            border-image: url(https://i.postimg.cc/yN1T9T6T/wood-frame.png) 20 stretch;
-            width: 80%;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
+        .modal-content { background-color: #f4e9d8; padding: 40px; border-radius: 5px; border: 10px solid transparent; border-image: url(https://i.postimg.cc/yN1T9T6T/wood-frame.png) 20 stretch; width: 80%; max-width: 500px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        
         #question_text { font-size: 2em; margin-bottom: 20px; color: #4a3728; }
         
-        /* Кнопки ответов в стиле старых деревянных табличек */
         .answer-button {
-            padding: 12px 20px;
-            margin-bottom: 10px;
-            background-color: #8c6d52;
-            color: #f4e9d8;
-            border: 2px solid #6b4f35;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.2em;
-            font-family: 'IM Fell English SC', serif;
-            text-shadow: 1px 1px 1px #4a3728;
-            box-shadow: 0 4px 0 #6b4f35;
-            transition: all 0.1s ease-in-out;
+            padding: 12px 20px; margin-bottom: 10px; background-color: #8c6d52; color: #f4e9d8;
+            border: 2px solid #6b4f35; border-radius: 5px; text-align: center; cursor: pointer;
+            font-weight: bold; font-size: 1.2em; font-family: 'IM Fell English SC', serif;
+            text-shadow: 1px 1px 1px #4a3728; box-shadow: 0 4px 0 #6b4f35; transition: all 0.1s ease-in-out;
         }
         .answer-button:hover { background-color: #a48465; }
-        .answer-button:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #6b4f35;
-        }
+        .answer-button:active { transform: translateY(4px); box-shadow: 0 0 0 #6b4f35; }
         .answers-container { display: flex; flex-direction: column; justify-content: center; }
 
         .final-screen h1 { font-size: 4em; color: #4a3728; text-shadow: 3px 3px 0px #c8b6a6; }
         .final-screen p { font-size: 1.5em; color: #6b4f35; }
         
-        /* Кнопка "Restart" */
         #restart_button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background-color: #a01c1c;
-            border-radius: 5px;
-            cursor: pointer;
-            border: 2px solid #6b4f35;
-            margin-top: 20px;
-            color: #f4e9d8;
-            font-family: 'IM Fell English SC', serif;
-            box-shadow: 0 4px 0 #6d1414;
-            transition: all 0.1s ease-in-out;
+            padding: 15px 30px; font-size: 1.2em; background-color: #a01c1c; border-radius: 5px;
+            cursor: pointer; border: 2px solid #6b4f35; margin-top: 20px; color: #f4e9d8;
+            font-family: 'IM Fell English SC', serif; box-shadow: 0 4px 0 #6d1414; transition: all 0.1s ease-in-out;
         }
-         #restart_button:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #6d1414;
-        }
+        #restart_button:active { transform: translateY(4px); box-shadow: 0 0 0 #6d1414; }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <!-- HTML СТРУКТУРА ОСТАЕТСЯ ПРЕЖНЕЙ -->
-        <div id="game_board" class="game-element">
-            <div id="cell1" class="cell"></div> <div id="cell2" class="cell"></div> <div id="cell3" class="cell"></div>
-            <div id="cell4" class="cell"></div> <div id="cell5" class="cell"></div> <div id="cell6" class="cell"></div>
-            <div id="cell7" class="cell"></div> <div id="cell8" class="cell"></div> <div id="cell9" class="cell"></div>
+    <!-- НОВИНКА: Стартовый экран -->
+    <div id="start-screen">
+        <div id="loading-bar-container">
+            <div id="loading-bar-progress"></div>
         </div>
-        <div id="effects-layer" style="position: absolute; top: 150px; left: 275px; pointer-events: none;">
-            <!-- Воронки -->
-            <div id="crater1" class="crater" style="position: absolute; top: 0px; left: 0px;"></div>
-            <div id="crater2" class="crater" style="position: absolute; top: 0px; left: 90px;"></div>
-            <div id="crater3" class="crater" style="position: absolute; top: 0px; left: 180px;"></div>
-            <div id="crater4" class="crater" style="position: absolute; top: 90px; left: 0px;"></div>
-            <div id="crater5" class="crater" style="position: absolute; top: 90px; left: 90px;"></div>
-            <div id="crater6" class="crater" style="position: absolute; top: 90px; left: 180px;"></div>
-            <div id="crater7" class="crater" style="position: absolute; top: 180px; left: 0px;"></div>
-            <div id="crater8" class="crater" style="position: absolute; top: 180px; left: 90px;"></div>
-            <div id="crater9" class="crater" style="position: absolute; top: 180px; left: 180px;"></div>
-            <!-- Взрывы -->
-            <div id="explosion1" class="explosion" style="position: absolute; top: 0px; left: 0px;"></div>
-            <div id="explosion2" class="explosion" style="position: absolute; top: 0px; left: 90px;"></div>
-            <div id="explosion3" class="explosion" style="position: absolute; top: 0px; left: 180px;"></div>
-            <div id="explosion4" class="explosion" style="position: absolute; top: 90px; left: 0px;"></div>
-            <div id="explosion5" class="explosion" style="position: absolute; top: 90px; left: 90px;"></div>
-            <div id="explosion6" class="explosion" style="position: absolute; top: 90px; left: 180px;"></div>
-            <div id="explosion7" class="explosion" style="position: absolute; top: 180px; left: 0px;"></div>
-            <div id="explosion8" class="explosion" style="position: absolute; top: 180px; left: 90px;"></div>
-            <div id="explosion9" class="explosion" style="position: absolute; top: 180px; left: 180px;"></div>
-            <!-- Контент (сундуки, мины) -->
-            <div id="content1" class="content-icon" style="background-image: url(https://i.postimg.cc/8cRk8Y4Z/chest.png); position: absolute; top: 0px; left: 0px;"></div>
-            <div id="content2" class="content-icon" style="background-image: url(https://i.postimg.cc/bN9f57hT/mine.png); position: absolute; top: 0px; left: 90px;"></div>
-        </div>
-        <div id="hud" class="game-element">
-            <div id="life_icon_1" class="life_icon"></div><div id="life_icon_2" class="life_icon"></div><div id="life_icon_3" class="life_icon"></div>
-        </div>
-        <div id="timer_display" class="game-element"></div>
-        <!-- Элемент с id="ship" теперь является вашим персонажем -->
-        <div id="ship" class="game-element"></div>
-        <div id="cannonball" class="game-element"></div>
-        <div id="question_window" class="modal-overlay">
-            <div class="modal-content"><div id="question_text"></div><div class="answers-container"></div></div>
-        </div>
-        <div id="chest_window" class="modal-overlay"><div class="modal-content"><h2>Сокровище!</h2><p>+10 секунд ко времени на ответ!</p></div></div>
-        <div id="mine_window" class="modal-overlay"><div class="modal-content"><h2>Опасность!</h2><p>Вы потеряли одну жизнь!</p></div></div>
-        <div id="win_screen" class="modal-overlay final-screen"><div class="modal-content"><h1>ПОБЕДА!</h1><p>Вы великолепный капитан!</p></div></div>
-        <div id="lose_screen" class="modal-overlay final-screen"><div class="modal-content"><h1>ПОРАЖЕНИЕ</h1><p>Ваш корабль потоплен...</p><div id="restart_button">Попробовать снова</div></div></div>
+        <button id="start-button">Играть</button>
     </div>
-    <div style="display: none;">
-        <!-- ДАННЫЕ ИГРЫ ОСТАЮТСЯ ПРЕЖНИМИ -->
-        <div id="config_lives">3</div> <div id="config_time">20</div> <div id="config_bonus">10</div>
-        <div id="type_cell1" data-type="chest"></div> <div id="type_cell2" data-type="mine"></div>
-        <div id="q_cell3">
-            <div class="question_text">Столица Франции?</div><div class="correct_answer">Париж</div><div class="wrong_answer">Берлин</div><div class="wrong_answer">Лондон</div>
+
+    <!-- НОВИНКА: Обертка для основного контента игры, изначально скрыта -->
+    <div id="main-game-content" style="display: none;">
+        <div id="game-container">
+            <div id="game_board" class="game-element">
+                <div id="cell1" class="cell"></div> <div id="cell2" class="cell"></div> <div id="cell3" class="cell"></div>
+                <div id="cell4" class="cell"></div> <div id="cell5" class="cell"></div> <div id="cell6" class="cell"></div>
+                <div id="cell7" class="cell"></div> <div id="cell8" class="cell"></div> <div id="cell9" class="cell"></div>
+            </div>
+            <div id="effects-layer" style="position: absolute; top: 150px; left: 275px; pointer-events: none;">
+                <!-- Воронки -->
+                <div id="crater1" class="crater" style="position: absolute; top: 0px; left: 0px;"></div>
+                <div id="crater2" class="crater" style="position: absolute; top: 0px; left: 90px;"></div>
+                <div id="crater3" class="crater" style="position: absolute; top: 0px; left: 180px;"></div>
+                <div id="crater4" class="crater" style="position: absolute; top: 90px; left: 0px;"></div>
+                <div id="crater5" class="crater" style="position: absolute; top: 90px; left: 90px;"></div>
+                <div id="crater6" class="crater" style="position: absolute; top: 90px; left: 180px;"></div>
+                <div id="crater7" class="crater" style="position: absolute; top: 180px; left: 0px;"></div>
+                <div id="crater8" class="crater" style="position: absolute; top: 180px; left: 90px;"></div>
+                <div id="crater9" class="crater" style="position: absolute; top: 180px; left: 180px;"></div>
+                <!-- Взрывы -->
+                <div id="explosion1" class="explosion" style="position: absolute; top: 0px; left: 0px;"></div>
+                <div id="explosion2" class="explosion" style="position: absolute; top: 0px; left: 90px;"></div>
+                <div id="explosion3" class="explosion" style="position: absolute; top: 0px; left: 180px;"></div>
+                <div id="explosion4" class="explosion" style="position: absolute; top: 90px; left: 0px;"></div>
+                <div id="explosion5" class="explosion" style="position: absolute; top: 90px; left: 90px;"></div>
+                <div id="explosion6" class="explosion" style="position: absolute; top: 90px; left: 180px;"></div>
+                <div id="explosion7" class="explosion" style="position: absolute; top: 180px; left: 0px;"></div>
+                <div id="explosion8" class="explosion" style="position: absolute; top: 180px; left: 90px;"></div>
+                <div id="explosion9" class="explosion" style="position: absolute; top: 180px; left: 180px;"></div>
+                <!-- Контент (сундуки, мины) -->
+                <div id="content1" class="content-icon" style="background-image: url(https://i.postimg.cc/8cRk8Y4Z/chest.png); position: absolute; top: 0px; left: 0px;"></div>
+                <div id="content2" class="content-icon" style="background-image: url(https://i.postimg.cc/bN9f57hT/mine.png); position: absolute; top: 0px; left: 90px;"></div>
+            </div>
+            <div id="hud" class="game-element">
+                <div id="life_icon_1" class="life_icon"></div><div id="life_icon_2" class="life_icon"></div><div id="life_icon_3" class="life_icon"></div>
+            </div>
+            <div id="timer_display" class="game-element"></div>
+            <div id="ship" class="game-element"></div>
+            <div id="cannonball" class="game-element"></div>
+            <div id="question_window" class="modal-overlay">
+                <div class="modal-content"><div id="question_text"></div><div class="answers-container"></div></div>
+            </div>
+            <div id="chest_window" class="modal-overlay"><div class="modal-content"><h2>Сокровище!</h2><p>+10 секунд ко времени на ответ!</p></div></div>
+            <div id="mine_window" class="modal-overlay"><div class="modal-content"><h2>Опасность!</h2><p>Вы потеряли одну жизнь!</p></div></div>
+            <div id="win_screen" class="modal-overlay final-screen"><div class="modal-content"><h1>ПОБЕДА!</h1><p>Вы великолепный капитан!</p></div></div>
+            <div id="lose_screen" class="modal-overlay final-screen"><div class="modal-content"><h1>ПОРАЖЕНИЕ</h1><p>Ваш корабль потоплен...</p><div id="restart_button">Попробовать снова</div></div></div>
         </div>
-        <div id="q_cell4">
-            <div class="question_text">Сколько будет 2 + 2 * 2?</div><div class="correct_answer">6</div><div class="wrong_answer">8</div>
+        <div style="display: none;">
+            <div id="config_lives">3</div> <div id="config_time">20</div> <div id="config_bonus">10</div>
+            <div id="type_cell1" data-type="chest"></div> <div id="type_cell2" data-type="mine"></div>
+            <div id="q_cell3">
+                <div class="question_text">Столица Франции?</div><div class="correct_answer">Париж</div><div class="wrong_answer">Берлин</div><div class="wrong_answer">Лондон</div>
+            </div>
+            <div id="q_cell4">
+                <div class="question_text">Сколько будет 2 + 2 * 2?</div><div class="correct_answer">6</div><div class="wrong_answer">8</div>
+            </div>
         </div>
     </div>
+    
     <script>
-        /* JAVASCRIPT КОД ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ, Т.К. ОН РАБОТАЕТ С ID ЭЛЕМЕНТОВ */
-        document.addEventListener('DOMContentLoaded',function(){const e={initialLives:parseInt(document.getElementById("config_lives").innerText)||3,questionTime:parseInt(document.getElementById("config_time").innerText)||20,bonusTime:parseInt(document.getElementById("config_bonus").innerText)||10},t={currentLives:e.initialLives,currentTimePerQuestion:e.questionTime,availableCellIds:[],isActionInProgress:!1,timerInterval:null},n={ship:document.getElementById("ship"),cannonball:document.getElementById("cannonball"),lifeIcons:[document.getElementById("life_icon_1"),document.getElementById("life_icon_2"),document.getElementById("life_icon_3")],timerDisplay:document.getElementById("timer_display"),questionWindow:document.getElementById("question_window"),chestWindow:document.getElementById("chest_window"),mineWindow:document.getElementById("mine_window"),winScreen:document.getElementById("win_screen"),loseScreen:document.getElementById("lose_screen"),restartButton:document.getElementById("restart_button"),gameBoard:document.getElementById("game_board"),cells:{}};function i(){console.log("Sea Battle Game Initializing...");for(let e=1;e<=9;e++){let i=`cell${e}`;document.getElementById(i)&&(n.cells[i]={element:document.getElementById(i),crater:document.getElementById(`crater${i}`),explosion:document.getElementById(`explosion${e}`),content:document.getElementById(`content${e}`),typeElement:document.getElementById(`type_${i}`)},t.availableCellIds.push(i))}n.ship.addEventListener("click",o),n.restartButton.addEventListener("click",()=>window.location.reload()),c(),console.log("Game Ready!")}function o(){if(!t.isActionInProgress&&0!==t.availableCellIds.length){t.isActionInProgress=!0;const e=Math.floor(Math.random()*t.availableCellIds.length),i=t.availableCellIds[e],o=n.cells[i];s(n.cannonball),n.cannonball.style.transition="all 1s cubic-bezier(0.4, 0, 1, 1)";const l=o.element.offsetLeft+n.gameBoard.offsetLeft,r=o.element.offsetTop+n.gameBoard.offsetTop;n.cannonball.style.left=`${l+25}px`,n.cannonball.style.top=`${r+25}px`,setTimeout(()=>{a(n.cannonball),n.cannonball.style.transition="none",n.cannonball.style.left="150px",n.cannonball.style.top="450px",function(e){const i=n.cells[e];i.explosion&&s(i.explosion),setTimeout(()=>{i.explosion&&a(i.explosion),i.element&&a(i.element),i.crater&&s(i.crater),t.availableCellIds=t.availableCellIds.filter(t=>t!==e),i.typeElement?"chest"===i.typeElement.dataset.type?d(i):"mine"===i.typeElement.dataset.type&&m(i):l(e)},500)}(i)},1e3)}}function l(e){const i=document.getElementById(`q_${e}`);if(!i)return console.warn(`Question for ${e} not found. Skipping.`),void u();const o=i.querySelector(".question_text").innerHTML,c=i.querySelector(".correct_answer").innerHTML,d=Array.from(i.querySelectorAll(".wrong_answer")).map(e=>e.innerHTML);n.questionWindow.querySelector("#question_text").innerHTML=o;const m=n.questionWindow.querySelector(".answers-container");m.innerHTML="";const p=[{text:c,correct:!0},...d.map(e=>({text:e,correct:!1}))].sort(()=>.5-Math.random());p.forEach(e=>{const t=document.createElement("div");t.className="answer-button",t.innerHTML=e.text,t.addEventListener("click",e.correct?r:f,{once:!0}),m.appendChild(t)}),s(n.questionWindow),g()}function r(){h(),a(n.questionWindow),u()}function f(){h(),a(n.questionWindow),p(),u()}function d(e){e.content&&s(e.content),t.currentTimePerQuestion+=e.bonusTime,s(n.chestWindow),setTimeout(()=>{a(n.chestWindow),u()},2e3)}function m(e){e.content&&s(e.content),s(n.mineWindow),setTimeout(()=>{a(n.mineWindow),p(),u()},2e3)}function p(){t.currentLives>0&&(t.currentLives--,c())}function c(){n.lifeIcons.forEach((e,i)=>{i<t.currentLives?s(e):a(e)})}function u(){t.currentLives<=0?w(!1):0===t.availableCellIds.length?w(!0):t.isActionInProgress=!1}function w(e){t.isActionInProgress=!0,a(n.ship,n.gameBoard,...n.lifeIcons,n.timerDisplay),e?s(n.winScreen):s(n.loseScreen)}function g(){let i=t.currentTimePerQuestion;s(n.timerDisplay),n.timerDisplay.innerText=i,t.timerInterval=setInterval(()=>{i--,n.timerDisplay.innerText=i,i<=0&&f()},1e3)}function h(){clearInterval(t.timerInterval),a(n.timerDisplay)}function s(...e){e.forEach(e=>e&&(e.style.visibility="visible"))}function a(...e){e.forEach(e=>e&&(e.style.visibility="hidden"))}i()});
+        document.addEventListener('DOMContentLoaded',function(){
+            
+            // --- НОВИНКА: ЛОГИКА СТАРТОВОГО ЭКРАНА ---
+            const startScreen = document.getElementById('start-screen');
+            const startButton = document.getElementById('start-button');
+            const mainGameContent = document.getElementById('main-game-content');
+
+            startButton.addEventListener('click', () => {
+                startScreen.style.display = 'none'; // Скрываем стартовый экран
+                mainGameContent.style.display = 'block'; // Показываем игру
+                i(); // Запускаем инициализацию игры
+            });
+
+            // --- ОСНОВНАЯ ЛОГИКА ИГРЫ (осталась почти без изменений) ---
+            const e={initialLives:parseInt(document.getElementById("config_lives").innerText)||3,questionTime:parseInt(document.getElementById("config_time").innerText)||20,bonusTime:parseInt(document.getElementById("config_bonus").innerText)||10},t={currentLives:e.initialLives,currentTimePerQuestion:e.questionTime,availableCellIds:[],isActionInProgress:!1,timerInterval:null},n={ship:document.getElementById("ship"),cannonball:document.getElementById("cannonball"),lifeIcons:[document.getElementById("life_icon_1"),document.getElementById("life_icon_2"),document.getElementById("life_icon_3")],timerDisplay:document.getElementById("timer_display"),questionWindow:document.getElementById("question_window"),chestWindow:document.getElementById("chest_window"),mineWindow:document.getElementById("mine_window"),winScreen:document.getElementById("win_screen"),loseScreen:document.getElementById("lose_screen"),restartButton:document.getElementById("restart_button"),gameBoard:document.getElementById("game_board"),cells:{}};function i(){console.log("Sea Battle Game Initializing...");for(let e=1;e<=9;e++){let i=`cell${e}`;document.getElementById(i)&&(n.cells[i]={element:document.getElementById(i),crater:document.getElementById(`crater${i}`),explosion:document.getElementById(`explosion${e}`),content:document.getElementById(`content${e}`),typeElement:document.getElementById(`type_${i}`)},t.availableCellIds.push(i))}n.ship.addEventListener("click",o),n.restartButton.addEventListener("click",()=>window.location.reload()),c(),console.log("Game Ready!")}function o(){if(!t.isActionInProgress&&0!==t.availableCellIds.length){t.isActionInProgress=!0;const e=Math.floor(Math.random()*t.availableCellIds.length),i=t.availableCellIds[e],o=n.cells[i];s(n.cannonball),n.cannonball.style.transition="all 1s cubic-bezier(0.4, 0, 1, 1)";const l=o.element.offsetLeft+n.gameBoard.offsetLeft,r=o.element.offsetTop+n.gameBoard.offsetTop;n.cannonball.style.left=`${l+25}px`,n.cannonball.style.top=`${r+25}px`,setTimeout(()=>{a(n.cannonball),n.cannonball.style.transition="none",n.cannonball.style.left="140px",n.cannonball.style.top="480px",function(e){const i=n.cells[e];i.explosion&&s(i.explosion),setTimeout(()=>{i.explosion&&a(i.explosion),i.element&&a(i.element),i.crater&&s(i.crater),t.availableCellIds=t.availableCellIds.filter(t=>t!==e),i.typeElement?"chest"===i.typeElement.dataset.type?d(i):"mine"===i.typeElement.dataset.type&&m(i):l(e)},500)}(i)},1e3)}}function l(e){const i=document.getElementById(`q_${e}`);if(!i)return console.warn(`Question for ${e} not found. Skipping.`),void u();const o=i.querySelector(".question_text").innerHTML,c=i.querySelector(".correct_answer").innerHTML,d=Array.from(i.querySelectorAll(".wrong_answer")).map(e=>e.innerHTML);n.questionWindow.querySelector("#question_text").innerHTML=o;const m=n.questionWindow.querySelector(".answers-container");m.innerHTML="";const p=[{text:c,correct:!0},...d.map(e=>({text:e,correct:!1}))].sort(()=>.5-Math.random());p.forEach(e=>{const t=document.createElement("div");t.className="answer-button",t.innerHTML=e.text,t.addEventListener("click",e.correct?r:f,{once:!0}),m.appendChild(t)}),s(n.questionWindow),g()}function r(){h(),a(n.questionWindow),u()}function f(){h(),a(n.questionWindow),p(),u()}function d(e){e.content&&s(e.content),t.currentTimePerQuestion+=e.bonusTime,s(n.chestWindow),setTimeout(()=>{a(n.chestWindow),u()},2e3)}function m(e){e.content&&s(e.content),s(n.mineWindow),setTimeout(()=>{a(n.mineWindow),p(),u()},2e3)}function p(){t.currentLives>0&&(t.currentLives--,c())}function c(){n.lifeIcons.forEach((e,i)=>{i<t.currentLives?s(e):a(e)})}function u(){t.currentLives<=0?w(!1):0===t.availableCellIds.length?w(!0):t.isActionInProgress=!1}function w(e){t.isActionInProgress=!0,a(n.ship,n.gameBoard,...n.lifeIcons,n.timerDisplay),e?s(n.winScreen):s(n.loseScreen)}function g(){let i=t.currentTimePerQuestion;s(n.timerDisplay),n.timerDisplay.innerText=i,t.timerInterval=setInterval(()=>{i--,n.timerDisplay.innerText=i,i<=0&&f()},1e3)}function h(){clearInterval(t.timerInterval),a(n.timerDisplay)}function s(...e){e.forEach(e=>e&&(e.style.visibility="visible"))}function a(...e){e.forEach(e=>e&&(e.style.visibility="hidden"))}
+        });
     </script>
 </body>
 </html>
